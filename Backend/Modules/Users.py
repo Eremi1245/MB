@@ -84,7 +84,7 @@ class User:
 		User.users_id += 1
 
 	@connect
-	def add_to_db(self, table='users', columns='', values={}):
+	def add_to_db(self, table='users', columns='id, users_type, phone,email', values={}):
 		"""
 		Добавить юзера в БД
 		:param table: Таблица для добавления
@@ -93,20 +93,20 @@ class User:
 		:return:
 		"""
 		if not values.keys:
-			values[1] = [self.user_id, self.name]
+			values[1] = [f"{self.user_id}, '{self.name}','{self.phone}','{self.email}'"]
 		value_str = ''
 		if len(values.keys()) > 1:
 			for i in list(values.keys())[0:-1]:
 				value_str = value_str + f'({str(values[i])})' + ',' + '\n'
 			value_str = value_str + f'({str(values[list(values.keys())[-1]])})' + ';'
 		elif len(values.keys()) == 1:
-			value_str = value_str + f'({str(values[list(values.keys())[0]])})' + ';'
+			value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
 
 		if columns == '':
 			query = f"INSERT INTO {table} VALUES {value_str}"
 		else:
 			query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
-		print(globals())
+		print(query)
 		cursor.execute(query)
 		conn.commit()
 
@@ -170,11 +170,15 @@ class Club(User):
 		super().__init__(name, phone, email)
 
 	def add_to_db(self):
-		super(Club, self).add_to_db(table='clubs', columns='', values={
-			1: [self.name, self.phone, self.email, self.shrt_name, self.o_p_f, self.jur_addr, self.fact_addr, self.site,
-				self.inn, self.kpp, self.okpo,
-				self.ogrn, self.bank_name, self.cor_ac, self.check_ac, self.bik, self.ustav, self.reg_in_min_just,
-				self.reg_in_tax, self.creat_club, self.creat_rucovod, self.ofice]})
+		super(Club, self).add_to_db(table='clubs', columns='club_id,name,phone,email,shrt_name,o_p_f,jur_addr,'
+														   'fact_addr,site,inn,kpp,okpo,ogrn,bank_name,cor_ac,'
+														   'check_ac,bik,ustav,reg_in_min_just,reg_in_tax,creat_club,'
+														   'creat_rucovod,ofice', values={
+			1: [f"{self.user_id},'{self.name}', '{self.phone}', '{self.email}', '{self.shrt_name}', '{self.o_p_f}', '{self.jur_addr}',"
+				f"'{self.fact_addr}', '{self.site}','{self.inn}', '{self.kpp}', '{self.okpo}','{self.ogrn}', "
+				f"'{self.bank_name}', '{self.cor_ac}', '{self.check_ac}', '{self.bik}', '{self.ustav}', "
+				f"'{self.reg_in_min_just}','{self.reg_in_tax}', '{self.creat_club}', '{self.creat_rucovod}', "
+				f"'{self.ofice}'"]})
 
 	def del_from_db(self):
 		super(Club, self).del_from_db(table='clubs', columns='name', values={})
