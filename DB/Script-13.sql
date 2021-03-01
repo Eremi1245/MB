@@ -51,7 +51,7 @@ USE MFF_Base;
 -- КПП
 -- руководитель
 -- тренеры
--- аттестационный статус
+-- аттестационный статус 
 
 
 
@@ -110,10 +110,10 @@ CREATE TABLE club_state (
 	user_id BIGINT UNSIGNED NOT null,
 	club_id BIGINT UNSIGNED NOT NULL,
 	name VARCHAR(255),
-	phone VARCHAR(255),
-	email VARCHAR(255),
 	second_name VARCHAR(255),
 	patrom VARCHAR(255),
+	phone VARCHAR(255),
+	email VARCHAR(255),
 	name_of_state VARCHAR(255),
 	doc_of_study VARCHAR(255),
 	licence VARCHAR(255),

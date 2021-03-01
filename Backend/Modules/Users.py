@@ -22,22 +22,22 @@ path_to_db = getcwd()[0:-7] + 'DB\\db_config.ini'
 
 
 def read_db_config(filename=path_to_db, section='mysql'):
-	""" Читает конфигурацию Базы данных и возвращает словарь с параметрами
+    """ Читает конфигурацию Базы данных и возвращает словарь с параметрами
 	:param filename: имя конфига
 	:param section: секция с данными базы данных
 	:return: словарь с параментрами
 	"""
-	parser = ConfigParser()
-	parser.read(filename)
-	db = {}
-	if parser.has_section(section):
-		items = parser.items(section)
-		for item in items:
-			db[item[0]] = item[1]
-	else:
-		raise Exception('{0} not found in the {1} file'.format(section, filename))
+    parser = ConfigParser()
+    parser.read(filename)
+    db = {}
+    if parser.has_section(section):
+        items = parser.items(section)
+        for item in items:
+            db[item[0]] = item[1]
+    else:
+        raise Exception('{0} not found in the {1} file'.format(section, filename))
 
-	return db
+    return db
 
 
 db_config = read_db_config()
@@ -48,194 +48,180 @@ cursor = conn.cursor()
 
 
 def connect(func):
-	"""Подключение в БД """
+    """Подключение в БД """
 
-	@wraps(func)
-	def wrapper(*args, **kwargs):
-		conn = mysql.connector.connect(**db_config)
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        conn = mysql.connector.connect(**db_config)
 
-		try:
-			print('Соединение с MySQL базой...')
-			if conn.is_connected():
-				print('соединение установлено.')
-			else:
-				print('соединения нет!!!.')
+        try:
+            print('Соединение с MySQL базой...')
+            if conn.is_connected():
+                print('соединение установлено.')
+            else:
+                print('соединения нет!!!.')
 
-		except Error as error:
-			print(error)
-		func_result = func(*args, **kwargs)
-		if func_result:
-			conn.close()
-			print('Соединение закрыто.')
-			return func_result
-		else:
-			conn.close()
-			print('Соединение закрыто.')
+        except Error as error:
+            print(error)
+        func_result = func(*args, **kwargs)
+        if func_result:
+            conn.close()
+            print('Соединение закрыто.')
+            return func_result
+        else:
+            conn.close()
+            print('Соединение закрыто.')
 
-	return (wrapper)
+    return (wrapper)
 
 
 class User:
-	users_id = 1
+    users_id = 1
 
-	def __init__(self, type):
-		self.type = type
-		self.user_id=User.users_id
-		User.users_id += 1
+    def __init__(self, type):
+        self.type = type
+        self.user_id = User.users_id
+        User.users_id += 1
 
-	@connect
-	def add_to_db(self):
-		"""
+    @connect
+    def add_to_db(self):
+        """
 		Добавить юзера в БД
 		"""
-		table = 'users'
-		columns = 'id, users_type'
-		values = {1:[f"{self.user_id}, '{self.type}'"]}
-		value_str = ''
-		# if len(values.keys()) > 1:
-		# 	for i in list(values.keys())[0:-1]:
-		# 		value_str = value_str + f'({str(values[i])})' + ',' + '\n'
-		# 	value_str = value_str + f'({str(values[list(values.keys())[-1]])})' + ';'
-		# elif len(values.keys()) == 1:
-		# 	value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
-		# if columns == '':
-		# 	query = f"INSERT INTO {table} VALUES {value_str}"
-		# else:
-		# 	query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
-		value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
-		query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
+        table = 'users'
+        columns = 'id, users_type'
+        values = {1: [f"{self.user_id}, '{self.type}'"]}
+        value_str = ''
+        value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
+        query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
 
-		cursor.execute(query)
-		conn.commit()
+        cursor.execute(query)
+        conn.commit()
 
-	@connect
-	def del_from_db(self, table='users', columns='name', values={}):
-		"""
+    @connect
+    def del_from_db(self):
+        """
 		Удалить юзера из БД
-		:param self:
-		:param table:
-		:param columns:
-		:param values:
-		:return:
 		"""
-		if not values.keys:
-			values[1] = self.name
-		query = f'DELETE FROM {table} WHERE {columns} = {values[1]}'
-		cursor.execute(query)
-		conn.commit()
+        query = f'DELETE FROM users WHERE id = {self.user_id}'
+        cursor.execute(query)
+        conn.commit()
 
-	@connect
-	def update_data_user(self, table='users', columns='name', values={}):
-		"""
+    @connect
+    def update_data_user(self, table, columns, vls, id):
+        """
 		Обновление данных о юзере
-		:param values:
-		:param table: 
-		:param columns: 
-		:return: 
-		type value_str: dict
 		"""
-		if not values.keys:
-			values[1] = self.name
-		query = f"UPDATE {table} SET {columns} = {values[1]} WHERE {columns}={self.name}"
-		cursor.execute(query)
-		conn.commit()
+        quer_vls = ''
+        columns = columns.split(' ')
+        vls = vls.split(' ')
+        if len(columns) == len(vls):
+            for i in range(len(columns)):
+                quer_vls = quer_vls + f"{columns[i]}='{vls[i]}', "
+
+        query = f"UPDATE {table} SET {quer_vls[:-2]} WHERE {id}={self.user_id}"
+        cursor.execute(query)
+        conn.commit()
 
 
 class Club:
-	def __init__(self, name, shrt_name='None', o_p_f='None', jur_addr='None', fact_addr='None', phone='None',
-				 site='None', email='None', inn='None', kpp='None', okpo='None', ogrn='None', bank_name='None',
-				 cor_ac='None', check_ac='None', bik='None', ustav='None', reg_in_min_just='None', reg_in_tax='None',
-				 creat_club='None', creat_rucovod='None', ofice='None'):
-		self.name=name
-		self.shrt_name = shrt_name
-		self.o_p_f = o_p_f
-		self.jur_addr = jur_addr
-		self.fact_addr = fact_addr
-		self.phone=phone
-		self.site = site
-		self.email=email
-		self.inn = inn
-		self.kpp = kpp
-		self.okpo = okpo
-		self.ogrn = ogrn
-		self.bank_name = bank_name
-		self.cor_ac = cor_ac
-		self.check_ac = check_ac
-		self.bik = bik
-		self.ustav = ustav
-		self.reg_in_min_just = reg_in_min_just
-		self.reg_in_tax = reg_in_tax
-		self.creat_club = creat_club
-		self.creat_rucovod = creat_rucovod
-		self.ofice = ofice
-		self.user_club=User('Клуб')
-		self.user_club.add_to_db()
+    def __init__(self, name, shrt_name='None', o_p_f='None', jur_addr='None', fact_addr='None', phone='None',
+                 site='None', email='None', inn='None', kpp='None', okpo='None', ogrn='None', bank_name='None',
+                 cor_ac='None', check_ac='None', bik='None', ustav='None', reg_in_min_just='None', reg_in_tax='None',
+                 creat_club='None', creat_rucovod='None', ofice='None'):
+        self.name = name
+        self.shrt_name = shrt_name
+        self.o_p_f = o_p_f
+        self.jur_addr = jur_addr
+        self.fact_addr = fact_addr
+        self.phone = phone
+        self.site = site
+        self.email = email
+        self.inn = inn
+        self.kpp = kpp
+        self.okpo = okpo
+        self.ogrn = ogrn
+        self.bank_name = bank_name
+        self.cor_ac = cor_ac
+        self.check_ac = check_ac
+        self.bik = bik
+        self.ustav = ustav
+        self.reg_in_min_just = reg_in_min_just
+        self.reg_in_tax = reg_in_tax
+        self.creat_club = creat_club
+        self.creat_rucovod = creat_rucovod
+        self.ofice = ofice
+        self.user_club = User('Клуб')
+        self.user_club.add_to_db()
 
-	@connect
-	def add_to_db(self):
-		table = 'clubs'
-		columns = 'club_id,name,phone,email,shrt_name,o_p_f,jur_addr,' \
-				  'fact_addr,site,inn,kpp,okpo,ogrn,bank_name,cor_ac,' \
-				  'check_ac,bik,ustav,reg_in_min_just,reg_in_tax,creat_club,''creat_rucovod,ofice'
-		values = {1: [f"{self.user_club.user_id},'{self.name}', '{self.phone}', '{self.email}', '{self.shrt_name}', "
-					  f"'{self.o_p_f}', '{self.jur_addr}','{self.fact_addr}', '{self.site}', '{self.inn}',"
-					  f"'{self.kpp}', '{self.okpo}','{self.ogrn}', '{self.bank_name}', '{self.cor_ac}', "
-					  f"'{self.check_ac}', '{self.bik}', '{self.ustav}','{self.reg_in_min_just}',"
-					  f"'{self.reg_in_tax}', '{self.creat_club}', '{self.creat_rucovod}','{self.ofice}'"]}
-		value_str = ''
-		value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
-		query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
+    @connect
+    def add_to_db(self):
+        table = 'clubs'
+        columns = 'club_id,name,phone,email,shrt_name,o_p_f,jur_addr,' \
+                  'fact_addr,site,inn,kpp,okpo,ogrn,bank_name,cor_ac,' \
+                  'check_ac,bik,ustav,reg_in_min_just,reg_in_tax,creat_club,''creat_rucovod,ofice'
+        values = f"({self.user_club.user_id},'{self.name}', '{self.phone}', '{self.email}', '{self.shrt_name}'," \
+                 f"'{self.o_p_f}', '{self.jur_addr}','{self.fact_addr}', '{self.site}', '{self.inn}'," \
+                 f"'{self.kpp}', '{self.okpo}','{self.ogrn}', '{self.bank_name}', '{self.cor_ac}'," \
+                 f"'{self.check_ac}', '{self.bik}', '{self.ustav}','{self.reg_in_min_just}'," \
+                 f"'{self.reg_in_tax}', '{self.creat_club}', '{self.creat_rucovod}','{self.ofice}')"
+        query = f"INSERT INTO {table}({columns}) VALUES {values}"
+        cursor.execute(query)
+        conn.commit()
 
-		cursor.execute(query)
-		conn.commit()
+    def del_from_db(self):
+        query = f'DELETE FROM clubs WHERE club_id = {self.user_club.user_id}'
+        cursor.execute(query)
+        conn.commit()
+        self.user_club.del_from_db()
 
-
-	def del_from_db(self):
-		super(Club, self).del_from_db(table='clubs', columns='name', values={})
-
-	@connect
-	def update_data_user(self, table='clubs', columns='', values={}):
-		"""
-		Изменить данные Клуба
-		:param table: Таблица для добавления
-		:param columns: в какие колонки вносим измненения
-		:param values: значения в виде value_str[первая колонка]= новое значение
-		:return:
-		"""
-		columns = columns.split(',')
-		for col in range(len(columns)):
-			query = f"UPDATE {table} SET {columns[col]} = {values[col]} WHERE club_id={self.user_id}"
-			cursor.execute(query)
-			conn.commit()
+    @connect
+    def update_data_user(self, columns='', vls=''):
+        self.user_club.update_data_user(table='clubs', columns=columns, vls=vls, id='club_id')
 
 
-class State(User):
-	def __init__(self, name, second_name, patrom='None', name_of_state='None', club_id='None', doc_of_study='None',
-				 licence='None', phone='None', email='None'):
-		self.second_name = second_name
-		self.patrom = patrom
-		self.name_of_state = name_of_state
-		self.club_id = club_id
-		self.doc_of_study = doc_of_study
-		self.licence = licence
-		super().__init__(name, phone, email)
+class State:
+    def __init__(self, club_id, name, second_name, patrom='None', phone='None', email='None', name_of_state='None',
+                 doc_of_study='None', licence='None'):
+        self.club_id = self.check_club_id(club_id)
+        self.name = name
+        self.second_name = second_name
+        self.patrom = patrom
+        self.phone = phone
+        self.email = email
+        self.name_of_state = name_of_state
+        self.doc_of_study = doc_of_study
+        self.licence = licence
+        self.user_state = User('Сотрудник Клуба')
+        self.user_state.add_to_db()
 
-		def add_to_db(self):
-			super(State, self).add_to_db(table='club_state', columns='', values={
-				1: [self.name, self.phone, self.email, self.second_name, self.patrom, self.name_of_state, self.club_id,
-					self.doc_of_study, self.licence]})
+    @connect
+    def add_to_db(self):
+        table = 'club_state'
+        columns = 'user_id,club_id,name, second_name, patrom,phone, email, name_of_state,doc_of_study,licence'
+        values = f"({self.user_state.user_id},{self.club_id},'{self.name}', '{self.second_name}', '{self.patrom}', " \
+                 f"'{self.phone}','{self.email}', '{self.name_of_state}','{self.doc_of_study}', '{self.licence}')"
+        query = f"INSERT INTO {table}({columns}) VALUES {values}"
+        cursor.execute(query)
+        conn.commit()
 
-		def del_from_db(self):
-			super(State, self).del_from_db(table='club_state', columns='name', values={})
+    def del_from_db(self):
+        query = f'DELETE FROM club_state WHERE user_id = {self.user_state.user_id}'
+        cursor.execute(query)
+        conn.commit()
+        self.user_state.del_from_db()
 
-		@connect
-		def update_data_user(self, table='club_state', columns='', values={}):
-			columns = columns.split(',')
-			for col in range(len(columns)):
-				query = f"UPDATE {table} SET {columns[col]} = {values[col]} WHERE id={self.user_id}"
-				cursor.execute(query)
-				conn.commit()
+    @connect
+    def update_data_user(self, columns='', vls=''):
+        self.user_state.update_data_user(table='club_state', columns=columns, vls=vls, id='user_id')
+
+    @connect
+    def check_club_id(self, club_id):
+        query = f"select club_id from clubs where name='{club_id}'"
+        cursor.execute(query)
+        result = cursor.fetchall()[0][0]
+        return result
 
 
 class Stadium(User):
-	pass
+    pass
