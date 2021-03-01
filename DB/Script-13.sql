@@ -59,8 +59,6 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 	id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
     users_type VARCHAR(255),
-    phone VARCHAR(255),
-	email VARCHAR(255),
     created_at DATETIME DEFAULT NOW(),
 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
     ) COMMENT 'Общая таблица юзеров';

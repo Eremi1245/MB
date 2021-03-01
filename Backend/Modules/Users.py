@@ -16,6 +16,7 @@ from functools import wraps
 import mysql.connector
 from mysql.connector import Error
 from os import getcwd
+from time import sleep
 
 path_to_db = getcwd()[0:-7] + 'DB\\db_config.ini'
 
@@ -51,6 +52,7 @@ def connect(func):
 
 	@wraps(func)
 	def wrapper(*args, **kwargs):
+		conn = mysql.connector.connect(**db_config)
 
 		try:
 			print('Соединение с MySQL базой...')
@@ -76,37 +78,33 @@ def connect(func):
 class User:
 	users_id = 1
 
-	def __init__(self, name, phone='None', email='None'):
-		self.name = name
-		self.phone = phone
-		self.email = email
-		self.user_id = User.users_id
+	def __init__(self, type):
+		self.type = type
+		self.user_id=User.users_id
 		User.users_id += 1
 
 	@connect
-	def add_to_db(self, table='users', columns='id, users_type, phone,email', values={}):
+	def add_to_db(self):
 		"""
 		Добавить юзера в БД
-		:param table: Таблица для добавления
-		:param columns: в какие колонки
-		:param values: значения в виде value_str[первая строка]= [значение один,значение два, значение три]
-		:return:
 		"""
-		if not values.keys:
-			values[1] = [f"{self.user_id}, '{self.name}','{self.phone}','{self.email}'"]
+		table = 'users'
+		columns = 'id, users_type'
+		values = {1:[f"{self.user_id}, '{self.type}'"]}
 		value_str = ''
-		if len(values.keys()) > 1:
-			for i in list(values.keys())[0:-1]:
-				value_str = value_str + f'({str(values[i])})' + ',' + '\n'
-			value_str = value_str + f'({str(values[list(values.keys())[-1]])})' + ';'
-		elif len(values.keys()) == 1:
-			value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
+		# if len(values.keys()) > 1:
+		# 	for i in list(values.keys())[0:-1]:
+		# 		value_str = value_str + f'({str(values[i])})' + ',' + '\n'
+		# 	value_str = value_str + f'({str(values[list(values.keys())[-1]])})' + ';'
+		# elif len(values.keys()) == 1:
+		# 	value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
+		# if columns == '':
+		# 	query = f"INSERT INTO {table} VALUES {value_str}"
+		# else:
+		# 	query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
+		value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
+		query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
 
-		if columns == '':
-			query = f"INSERT INTO {table} VALUES {value_str}"
-		else:
-			query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
-		print(query)
 		cursor.execute(query)
 		conn.commit()
 
@@ -143,16 +141,19 @@ class User:
 		conn.commit()
 
 
-class Club(User):
+class Club:
 	def __init__(self, name, shrt_name='None', o_p_f='None', jur_addr='None', fact_addr='None', phone='None',
 				 site='None', email='None', inn='None', kpp='None', okpo='None', ogrn='None', bank_name='None',
 				 cor_ac='None', check_ac='None', bik='None', ustav='None', reg_in_min_just='None', reg_in_tax='None',
 				 creat_club='None', creat_rucovod='None', ofice='None'):
+		self.name=name
 		self.shrt_name = shrt_name
 		self.o_p_f = o_p_f
 		self.jur_addr = jur_addr
 		self.fact_addr = fact_addr
+		self.phone=phone
 		self.site = site
+		self.email=email
 		self.inn = inn
 		self.kpp = kpp
 		self.okpo = okpo
@@ -167,18 +168,27 @@ class Club(User):
 		self.creat_club = creat_club
 		self.creat_rucovod = creat_rucovod
 		self.ofice = ofice
-		super().__init__(name, phone, email)
+		self.user_club=User('Клуб')
+		self.user_club.add_to_db()
 
+	@connect
 	def add_to_db(self):
-		super(Club, self).add_to_db(table='clubs', columns='club_id,name,phone,email,shrt_name,o_p_f,jur_addr,'
-														   'fact_addr,site,inn,kpp,okpo,ogrn,bank_name,cor_ac,'
-														   'check_ac,bik,ustav,reg_in_min_just,reg_in_tax,creat_club,'
-														   'creat_rucovod,ofice', values={
-			1: [f"{self.user_id},'{self.name}', '{self.phone}', '{self.email}', '{self.shrt_name}', '{self.o_p_f}', '{self.jur_addr}',"
-				f"'{self.fact_addr}', '{self.site}','{self.inn}', '{self.kpp}', '{self.okpo}','{self.ogrn}', "
-				f"'{self.bank_name}', '{self.cor_ac}', '{self.check_ac}', '{self.bik}', '{self.ustav}', "
-				f"'{self.reg_in_min_just}','{self.reg_in_tax}', '{self.creat_club}', '{self.creat_rucovod}', "
-				f"'{self.ofice}'"]})
+		table = 'clubs'
+		columns = 'club_id,name,phone,email,shrt_name,o_p_f,jur_addr,' \
+				  'fact_addr,site,inn,kpp,okpo,ogrn,bank_name,cor_ac,' \
+				  'check_ac,bik,ustav,reg_in_min_just,reg_in_tax,creat_club,''creat_rucovod,ofice'
+		values = {1: [f"{self.user_club.user_id},'{self.name}', '{self.phone}', '{self.email}', '{self.shrt_name}', "
+					  f"'{self.o_p_f}', '{self.jur_addr}','{self.fact_addr}', '{self.site}', '{self.inn}',"
+					  f"'{self.kpp}', '{self.okpo}','{self.ogrn}', '{self.bank_name}', '{self.cor_ac}', "
+					  f"'{self.check_ac}', '{self.bik}', '{self.ustav}','{self.reg_in_min_just}',"
+					  f"'{self.reg_in_tax}', '{self.creat_club}', '{self.creat_rucovod}','{self.ofice}'"]}
+		value_str = ''
+		value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
+		query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
+
+		cursor.execute(query)
+		conn.commit()
+
 
 	def del_from_db(self):
 		super(Club, self).del_from_db(table='clubs', columns='name', values={})
