@@ -17,6 +17,13 @@ k1=State('Локомотив','Антон','Иванов','Владимиров�
 k1.add_to_db()
 k.del_from_db()
 k1.update_data_user('phone email','79057630517 xxxdsds@mail.ru')
+stad=Stadium('Спартаковец')
+stad2=Stadium('Спартаковец')
+stad.add_to_db()
+stad2.add_to_db()
+stad.del_from_db()
+stad2.update_data_user('phone email','79057630517 xxxdsds@mail.ru')
+
 
 # # x1.add_to_db()
 # print(x.user_id,x1.user_id,x2.user_id,x3.user_id,x5.user_id)

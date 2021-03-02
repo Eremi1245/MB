@@ -55,22 +55,23 @@ def connect(func):
         conn = mysql.connector.connect(**db_config)
 
         try:
-            print('Соединение с MySQL базой...')
-            if conn.is_connected():
-                print('соединение установлено.')
-            else:
+            # print('Соединение с MySQL базой...')
+            if not conn.is_connected():
+                # print('соединение установлено.')
                 print('соединения нет!!!.')
+            # else:
+            #     print('соединения нет!!!.')
 
         except Error as error:
             print(error)
         func_result = func(*args, **kwargs)
         if func_result:
             conn.close()
-            print('Соединение закрыто.')
+            # print('Соединение закрыто.')
             return func_result
         else:
             conn.close()
-            print('Соединение закрыто.')
+            # print('Соединение закрыто.')
 
     return (wrapper)
 
@@ -223,5 +224,115 @@ class State:
         return result
 
 
-class Stadium(User):
-    pass
+class Stadium:
+    def __init__(self, name, shrt_name='None', o_p_f='None', jur_addr='None', phone='None',
+                 site='None', email='None', inn='None', kpp='None', okpo='None', ogrn='None', in__Reg_stad=0,
+                 conf_in_expluatation=0,instr_pub_order=0,instr_pub_order_date_until='2021-01-01',
+                 act_categ=0,act_categ_date_until='2021-01-01',statd_plan=0):
+        self.name = name
+        self.shrt_name = shrt_name
+        self.o_p_f = o_p_f
+        self.jur_addr = jur_addr
+        self.phone = phone
+        self.site = site
+        self.email = email
+        self.inn = inn
+        self.kpp = kpp
+        self.okpo = okpo
+        self.ogrn = ogrn
+        self.in__Reg_stad =in__Reg_stad
+        self.conf_in_expluatation = conf_in_expluatation
+        self.instr_pub_order = instr_pub_order
+        self.instr_pub_order_date_until = instr_pub_order_date_until
+        self.act_categ = act_categ
+        self.act_categ_date_until = act_categ_date_until
+        self.statd_plan = statd_plan
+        self.user_stadium = User('Стадион')
+        self.user_stadium.add_to_db()
+
+    @connect
+    def add_to_db(self):
+        table = 'stadiums'
+        columns = 'stad_id,name,shrt_name,o_p_f,jur_addr,phone,site,email,inn,kpp,okpo,ogrn,in__Reg_stad,' \
+                  'conf_in_expluatation,instr_pub_order,instr_pub_order_date_until,act_categ,' \
+                  'act_categ_date_until,statd_plan'
+        values = f"({self.user_stadium.user_id},'{self.name}', '{self.shrt_name}', '{self.o_p_f}', '{self.jur_addr}'," \
+                 f"'{self.phone}', '{self.site}','{self.email}', '{self.inn}', '{self.kpp}','{self.okpo}', " \
+                 f"'{self.ogrn}','{self.in__Reg_stad}', '{self.conf_in_expluatation}', '{self.instr_pub_order}'," \
+                 f"'{self.instr_pub_order_date_until}', '{self.act_categ}'," \
+                 f" '{self.act_categ_date_until}','{self.statd_plan}')"
+        query = f"INSERT INTO {table}({columns}) VALUES {values}"
+        cursor.execute(query)
+        conn.commit()
+
+    def del_from_db(self):
+        query = f'DELETE FROM stadiums WHERE stad_id = {self.user_stadium.user_id}'
+        cursor.execute(query)
+        conn.commit()
+        self.user_stadium.del_from_db()
+
+    @connect
+    def update_data_user(self, columns='', vls=''):
+        self.user_stadium.update_data_user(table='stadiums', columns=columns, vls=vls, id='stad_id')
+
+#     @connect
+# def attestation():
+#     id,club_id,year,date,application_1,application_2
+#     tinyint
+#     default
+#     '0'
+#     COMMENT
+#     'О проведении политики ',
+#     application_3
+#     tinyint
+#     default
+#     '0'
+#     COMMENT
+#     'Соблюдение регламентов',
+#     application_4
+#     tinyint
+#     default
+#     '0'
+#     COMMENT
+#     'Список сотрудников',
+#     application_5
+#     tinyint
+#     default
+#     '0'
+#     COMMENT
+#     'Гарантийное письмо',
+#     reg_in_min_just
+#     tinyint
+#     default
+#     '0',
+#     reg_in_tax
+#     tinyint
+#     default
+#     '0',
+#     creat_club
+#     tinyint
+#     default
+#     '0',
+#     ustav
+#     enum('Актуальные', 'Не актуальные'),
+#     creat_rucovod
+#     enum('Актуальные', 'Не актуальные'),
+#     ofice
+#     enum('Актуальные', 'Не актуальные'),
+#     stadium
+#     BIGINT
+#     UNSIGNED
+#     NOT
+#     NULL,
+#     document
+#     VARCHAR(255),
+#     document_until
+#     Date,
+#     stadium_status
+#     tinyint
+#     default
+#     '0',
+#     status
+#     tinyint
+#     default
+#     '0',
