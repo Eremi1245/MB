@@ -16,7 +16,9 @@ from functools import wraps
 import mysql.connector
 from mysql.connector import Error
 from os import getcwd
-from time import sleep
+from datetime import datetime as dt
+
+now = dt.now().strftime("%Y-%m-%d")
 
 path_to_db = getcwd()[0:-7] + 'DB\\db_config.ini'
 
@@ -128,8 +130,8 @@ class User:
 class Club:
     def __init__(self, name, shrt_name='None', o_p_f='None', jur_addr='None', fact_addr='None', phone='None',
                  site='None', email='None', inn='None', kpp='None', okpo='None', ogrn='None', bank_name='None',
-                 cor_ac='None', check_ac='None', bik='None', ustav='None', reg_in_min_just='None', reg_in_tax='None',
-                 creat_club='None', creat_rucovod='None', ofice='None'):
+                 cor_ac='None', check_ac='None', bik='None', ustav='Не актуальные', reg_in_min_just=0, reg_in_tax=0,
+                 creat_club=0, creat_rucovod='Не актуальные', ofice='Не актуальные'):
         self.name = name
         self.shrt_name = shrt_name
         self.o_p_f = o_p_f
@@ -152,6 +154,7 @@ class Club:
         self.creat_club = creat_club
         self.creat_rucovod = creat_rucovod
         self.ofice = ofice
+        self.attestations={}
         self.user_club = User('Клуб')
         self.user_club.add_to_db()
 
@@ -170,6 +173,7 @@ class Club:
         cursor.execute(query)
         conn.commit()
 
+    @connect
     def del_from_db(self):
         query = f'DELETE FROM clubs WHERE club_id = {self.user_club.user_id}'
         cursor.execute(query)
@@ -179,6 +183,14 @@ class Club:
     @connect
     def update_data_user(self, columns='', vls=''):
         self.user_club.update_data_user(table='clubs', columns=columns, vls=vls, id='club_id')
+
+    def attestation(self,stadium, year, document_until, document=0, application_1=0, application_2=0,
+                 application_3=0, application_4=0,application_5=0):
+        att=Attestation( self, stadium=stadium, year=year, document_until=document_until, document=document, application_1=application_1,
+                         application_2=application_2,application_3=application_3, application_4=application_4,
+                         application_5=application_5)
+        self.attestations[year]=att
+
 
 
 class State:
@@ -227,8 +239,8 @@ class State:
 class Stadium:
     def __init__(self, name, shrt_name='None', o_p_f='None', jur_addr='None', phone='None',
                  site='None', email='None', inn='None', kpp='None', okpo='None', ogrn='None', in__Reg_stad=0,
-                 conf_in_expluatation=0,instr_pub_order=0,instr_pub_order_date_until='2021-01-01',
-                 act_categ=0,act_categ_date_until='2021-01-01',statd_plan=0):
+                 conf_in_expluatation=0, instr_pub_order=0, instr_pub_order_date_until='2021-01-01',
+                 act_categ=0, act_categ_date_until='2021-01-01', statd_plan=0):
         self.name = name
         self.shrt_name = shrt_name
         self.o_p_f = o_p_f
@@ -240,7 +252,7 @@ class Stadium:
         self.kpp = kpp
         self.okpo = okpo
         self.ogrn = ogrn
-        self.in__Reg_stad =in__Reg_stad
+        self.in__Reg_stad = in__Reg_stad
         self.conf_in_expluatation = conf_in_expluatation
         self.instr_pub_order = instr_pub_order
         self.instr_pub_order_date_until = instr_pub_order_date_until
@@ -275,64 +287,105 @@ class Stadium:
     def update_data_user(self, columns='', vls=''):
         self.user_stadium.update_data_user(table='stadiums', columns=columns, vls=vls, id='stad_id')
 
-#     @connect
-# def attestation():
-#     id,club_id,year,date,application_1,application_2
-#     tinyint
-#     default
-#     '0'
-#     COMMENT
-#     'О проведении политики ',
-#     application_3
-#     tinyint
-#     default
-#     '0'
-#     COMMENT
-#     'Соблюдение регламентов',
-#     application_4
-#     tinyint
-#     default
-#     '0'
-#     COMMENT
-#     'Список сотрудников',
-#     application_5
-#     tinyint
-#     default
-#     '0'
-#     COMMENT
-#     'Гарантийное письмо',
-#     reg_in_min_just
-#     tinyint
-#     default
-#     '0',
-#     reg_in_tax
-#     tinyint
-#     default
-#     '0',
-#     creat_club
-#     tinyint
-#     default
-#     '0',
-#     ustav
-#     enum('Актуальные', 'Не актуальные'),
-#     creat_rucovod
-#     enum('Актуальные', 'Не актуальные'),
-#     ofice
-#     enum('Актуальные', 'Не актуальные'),
-#     stadium
-#     BIGINT
-#     UNSIGNED
-#     NOT
-#     NULL,
-#     document
-#     VARCHAR(255),
-#     document_until
-#     Date,
-#     stadium_status
-#     tinyint
-#     default
-#     '0',
-#     status
-#     tinyint
-#     default
-#     '0',
+
+class Attestation:
+    ation_id = 1
+
+    def __init__(self, club, stadium, year, document_until, document=0, application_1=0, application_2=0,
+                 application_3=0, application_4=0,
+                 application_5=0, ):
+        self.stad=stadium
+        self.id = Attestation.ation_id
+        Attestation.ation_id += 1
+        self.year = year
+        self.club_id = club.user_club.user_id
+        self.stad_id = stadium.user_stadium.user_id
+        # Учредительные документы
+        self.ustav = club.ustav
+        self.reg_in_min_just = club.reg_in_min_just
+        self.reg_in_tax = club.reg_in_tax
+        self.creat_club = club.creat_club
+        self.creat_rucovod = club.creat_rucovod
+        self.ofice = club.ofice
+        # Документы стадиона
+        self.in__Reg_stad = stadium.in__Reg_stad
+        self.conf_in_expluatation = stadium.conf_in_expluatation
+        self.instr_pub_order = stadium.instr_pub_order
+        self.instr_pub_order_date_until = stadium.instr_pub_order_date_until
+        self.act_categ = stadium.act_categ
+        self.act_categ_date_until = stadium.act_categ_date_until
+        self.statd_plan = stadium.statd_plan
+        self.document = document
+        self.document_until = document_until
+        # Заявления
+        self.application_1 = application_1
+        self.application_2 = application_2
+        self.application_3 = application_3
+        self.application_4 = application_4
+        self.application_5 = application_5
+        # Статус аттестации и стадиона
+        self.stad_status = 0
+        self.status = 0
+        self.check_stad_status(stadium)
+        self.check_status()
+
+    def check_stad_status(self, stadium):
+        if stadium.in__Reg_stad == 1 and stadium.conf_in_expluatation == 1 \
+                and stadium.instr_pub_order == 1 and stadium.instr_pub_order_date_until > now \
+                and stadium.act_categ == 1 and stadium.act_categ_date_until > now \
+                and stadium.statd_plan == 1 and self.document == 1 and self.document_until > now:
+            self.stad_status = 1
+
+    def check_status(self):
+        if self.application_1 == 1 and self.application_2 == 1 and self.application_3 == 1 \
+                and self.application_4 == 1 and self.application_5 == 1 and self.stad_status == 1:
+            self.status = 1
+
+    @connect
+    def add_to_db(self):
+        table = 'attestation'
+        columns = 'id,club_id,`year`,application_1,application_2,application_3 ,application_4 ,application_5 ,' \
+                  'reg_in_min_just ,reg_in_tax ,creat_club,ustav ,creat_rucovod ,' \
+                  'ofice ,stadium ,document ,document_until ,stadium_status ,status'
+
+        values = f"({self.id},{self.club_id},'{self.year}', '{self.application_1}', '{self.application_2}'," \
+                 f" '{self.application_3}','{self.application_4}', '{self.application_5}'," \
+                 f"'{self.reg_in_min_just}', '{self.reg_in_tax}', '{self.creat_club}'," \
+                 f"'{self.ustav}', '{self.creat_rucovod}','{self.ofice}', '{self.stad_id}'," \
+                 f"'{self.document}','{self.document_until}', '{self.stad_status}', '{self.status}')"
+        query = f"INSERT INTO {table}({columns}) VALUES {values}"
+        cursor.execute(query)
+        conn.commit()
+
+    @connect
+    def del_from_db(self):
+        query = f'DELETE FROM attestation WHERE id = {self.id}'
+        cursor.execute(query)
+        conn.commit()
+
+    @connect
+    def update_attestation(self, columns='', vls=''):
+        quer_vls = ''
+        columns = columns.split(' ')
+        vls = vls.split(' ')
+        if len(columns) == len(vls):
+            for i in range(len(columns)):
+                quer_vls = quer_vls + f"{columns[i]}='{vls[i]}', "
+        query = f"UPDATE attestation SET {quer_vls[:-2]} WHERE id={self.id}"
+        if 'status' in columns:
+            cursor.execute(query)
+            conn.commit()
+        elif ('status' in columns) and ('stadium_status' in columns):
+            cursor.execute(query)
+            conn.commit()
+        else:
+            self.check_stad_status(self.stad)
+            if self.stad_status == 1:
+                self.update_attestation(columns='stadium_status', vls='1')
+            self.check_status()
+            if self.status == 1:
+                self.update_attestation(columns='status', vls='1')
+            cursor.execute(query)
+            conn.commit()
+        for i in range(len(columns)):
+            setattr(self, columns[i], int(vls[i]))

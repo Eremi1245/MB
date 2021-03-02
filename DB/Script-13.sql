@@ -113,7 +113,7 @@ DROP TABLE IF EXISTS attestation;
 CREATE TABLE attestation (
 	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
 	club_id BIGINT UNSIGNED NOT NULL,
-	`year` date,
+	`year` int,
 	application_1 tinyint default '0' COMMENT 'Заявление о процедуре аттестации',
 	application_2 tinyint default '0'COMMENT 'О проведении политики ',
 	application_3 tinyint default '0'COMMENT 'Соблюдение регламентов',
