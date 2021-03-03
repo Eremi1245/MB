@@ -20,7 +20,7 @@ from datetime import datetime as dt
 
 now = dt.now().strftime("%Y-%m-%d")
 
-path_to_db = getcwd()[0:-7] + 'DB\\db_config.ini'
+path_to_db = getcwd() + '\\DB\\db_config.ini'
 
 
 def read_db_config(filename=path_to_db, section='mysql'):
