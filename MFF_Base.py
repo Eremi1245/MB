@@ -1,6 +1,5 @@
 from Backend.Modules.Users import *
-from UI import Start_UI
-
+from UI.Start_UI import *
 
 
 # x=Club('ЦСКА')
@@ -10,6 +9,8 @@ from UI import Start_UI
 # x.attestation(stad,2021,'2020-02-02')
 # x.attestations[2021].add_to_db()
 
-application = UI.Start_UI.mywindow()
+#Запускаем Интерфейс
+app = QtWidgets.QApplication([])
+application = mywindow()
 application.show()
 sys.exit(app.exec())

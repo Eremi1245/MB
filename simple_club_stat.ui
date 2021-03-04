@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>870</width>
+    <height>814</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>40</y>
+      <width>841</width>
+      <height>304</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="8">
+      <widget class="QTextEdit" name="textokpo"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="name">
+       <property name="text">
+        <string>name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="6">
+      <widget class="QTextEdit" name="textinn"/>
+     </item>
+     <item row="1" column="6">
+      <widget class="QTextEdit" name="textphone"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="shrt_name">
+       <property name="text">
+        <string>shrt_name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="10">
+      <widget class="QTextEdit" name="textinstr_pub_order"/>
+     </item>
+     <item row="4" column="2">
+      <widget class="QTextEdit" name="textjur_addr"/>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLabel" name="email">
+       <property name="text">
+        <string>email</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="7">
+      <widget class="QLabel" name="kpp">
+       <property name="text">
+        <string>kpp</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="10">
+      <widget class="QTextEdit" name="textact_categ"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QTextEdit" name="textshrt_name"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="o_p_f">
+       <property name="text">
+        <string>o_p_f</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="8">
+      <widget class="QTextEdit" name="textkpp"/>
+     </item>
+     <item row="2" column="9">
+      <widget class="QLabel" name="instr_pub_order">
+       <property name="text">
+        <string>instr_pub_order</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="8">
+      <widget class="QTextEdit" name="textin__Reg_stad"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QTextEdit" name="textName"/>
+     </item>
+     <item row="4" column="9">
+      <widget class="QLabel" name="act_categ">
+       <property name="text">
+        <string>act_categ</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="8">
+      <widget class="QTextEdit" name="textogrn"/>
+     </item>
+     <item row="2" column="7">
+      <widget class="QLabel" name="okpo">
+       <property name="text">
+        <string>okpo</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLabel" name="site">
+       <property name="text">
+        <string>site</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="7">
+      <widget class="QLabel" name="in__Reg_stad">
+       <property name="text">
+        <string>in__Reg_stad</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="6">
+      <widget class="QTextEdit" name="textemail"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QTextEdit" name="texto_p_f"/>
+     </item>
+     <item row="2" column="11">
+      <widget class="QLabel" name="statd_plan">
+       <property name="text">
+        <string>statd_plan</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="phone">
+       <property name="text">
+        <string>phone</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="jur_addr">
+       <property name="text">
+        <string>jur_addr</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="9">
+      <widget class="QLabel" name="instr_pub_order_date_until">
+       <property name="text">
+        <string>instr_pub_order_date_until</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="10">
+      <widget class="QTextEdit" name="texconf_in_expluatation"/>
+     </item>
+     <item row="4" column="3">
+      <widget class="QLabel" name="inn">
+       <property name="text">
+        <string>inn</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QTextEdit" name="textsite"/>
+     </item>
+     <item row="3" column="7">
+      <widget class="QLabel" name="ogrn">
+       <property name="text">
+        <string>ogrn</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="10">
+      <widget class="QTextEdit" name="textinstr_pub_order_date_until"/>
+     </item>
+     <item row="1" column="9">
+      <widget class="QLabel" name="conf_in_expluatation">
+       <property name="text">
+        <string>conf_in_expluatation</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="11">
+      <widget class="QLabel" name="act_categ_date_until">
+       <property name="text">
+        <string>act_categ_date_until</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="12">
+      <widget class="QTextEdit" name="textact_categ_date_until"/>
+     </item>
+     <item row="2" column="12">
+      <widget class="QTextEdit" name="textEdit_19"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="creatStad">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>350</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Создать Стадион</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>10</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Стадион</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_42">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>720</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Клуб</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>730</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Создать Клуб</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>410</y>
+      <width>841</width>
+      <height>304</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="2" column="8">
+      <widget class="QTextEdit" name="textokpo_2"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="name_2">
+       <property name="text">
+        <string>name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="6">
+      <widget class="QTextEdit" name="textinn_2"/>
+     </item>
+     <item row="1" column="6">
+      <widget class="QTextEdit" name="textphone_2"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="shrt_name_2">
+       <property name="text">
+        <string>shrt_name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="10">
+      <widget class="QTextEdit" name="textinstr_pub_order_2"/>
+     </item>
+     <item row="4" column="2">
+      <widget class="QTextEdit" name="textjur_addr_2"/>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLabel" name="email_2">
+       <property name="text">
+        <string>email</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="7">
+      <widget class="QLabel" name="kpp_2">
+       <property name="text">
+        <string>kpp</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="10">
+      <widget class="QTextEdit" name="textact_categ_2"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QTextEdit" name="textshrt_name_2"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="o_p_f_2">
+       <property name="text">
+        <string>o_p_f</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="8">
+      <widget class="QTextEdit" name="textkpp_2"/>
+     </item>
+     <item row="2" column="9">
+      <widget class="QLabel" name="instr_pub_order_2">
+       <property name="text">
+        <string>instr_pub_order</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="8">
+      <widget class="QTextEdit" name="textin__Reg_stad_2"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QTextEdit" name="textName_2"/>
+     </item>
+     <item row="4" column="9">
+      <widget class="QLabel" name="act_categ_2">
+       <property name="text">
+        <string>act_categ</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="8">
+      <widget class="QTextEdit" name="textogrn_2"/>
+     </item>
+     <item row="2" column="7">
+      <widget class="QLabel" name="okpo_2">
+       <property name="text">
+        <string>okpo</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLabel" name="site_2">
+       <property name="text">
+        <string>site</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="7">
+      <widget class="QLabel" name="in__Reg_stad_2">
+       <property name="text">
+        <string>in__Reg_stad</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="6">
+      <widget class="QTextEdit" name="textemail_2"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QTextEdit" name="texto_p_f_2"/>
+     </item>
+     <item row="2" column="11">
+      <widget class="QLabel" name="statd_plan_2">
+       <property name="text">
+        <string>statd_plan</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="phone_2">
+       <property name="text">
+        <string>phone</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="jur_addr_2">
+       <property name="text">
+        <string>jur_addr</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="9">
+      <widget class="QLabel" name="instr_pub_order_date_until_2">
+       <property name="text">
+        <string>instr_pub_order_date_until</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="10">
+      <widget class="QTextEdit" name="texconf_in_expluatation_2"/>
+     </item>
+     <item row="4" column="3">
+      <widget class="QLabel" name="inn_2">
+       <property name="text">
+        <string>inn</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QTextEdit" name="textsite_2"/>
+     </item>
+     <item row="3" column="7">
+      <widget class="QLabel" name="ogrn_2">
+       <property name="text">
+        <string>ogrn</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="10">
+      <widget class="QTextEdit" name="textinstr_pub_order_date_until_2"/>
+     </item>
+     <item row="1" column="9">
+      <widget class="QLabel" name="conf_in_expluatation_2">
+       <property name="text">
+        <string>conf_in_expluatation</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="11">
+      <widget class="QLabel" name="act_categ_date_until_2">
+       <property name="text">
+        <string>act_categ_date_until</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="12">
+      <widget class="QTextEdit" name="textact_categ_date_until_2"/>
+     </item>
+     <item row="2" column="12">
+      <widget class="QTextEdit" name="textEdit_20"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>870</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
