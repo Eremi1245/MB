@@ -326,14 +326,14 @@ class Attestation:
         # Статус аттестации и стадиона
         self.stad_status = 0
         self.status = 0
-        self.check_stad_status(stadium)
+        self.check_stad_status()
         self.check_status()
 
-    def check_stad_status(self, stadium):
-        if stadium.in__Reg_stad == 1 and stadium.conf_in_expluatation == 1 \
-                and stadium.instr_pub_order == 1 and stadium.instr_pub_order_date_until > now \
-                and stadium.act_categ == 1 and stadium.act_categ_date_until > now \
-                and stadium.statd_plan == 1 and self.document == 1 and self.document_until > now:
+    def check_stad_status(self):
+        if self.stad.in__Reg_stad == 1 and self.stad.conf_in_expluatation == 1 \
+                and self.stad.instr_pub_order == 1 and self.stad.instr_pub_order_date_until > now \
+                and self.stad.act_categ == 1 and self.stad.act_categ_date_until > now \
+                and self.stad.statd_plan == 1 and self.document == 1 and self.document_until > now:
             self.stad_status = 1
 
     def check_status(self):
@@ -365,27 +365,21 @@ class Attestation:
 
     @connect
     def update_attestation(self, columns='', vls=''):
-        quer_vls = ''
         columns = columns.split(' ')
         vls = vls.split(' ')
-        if len(columns) == len(vls):
-            for i in range(len(columns)):
-                quer_vls = quer_vls + f"{columns[i]}='{vls[i]}', "
-        query = f"UPDATE attestation SET {quer_vls[:-2]} WHERE id={self.id}"
-        if 'status' in columns:
-            cursor.execute(query)
-            conn.commit()
-        elif ('status' in columns) and ('stadium_status' in columns):
-            cursor.execute(query)
-            conn.commit()
-        else:
-            self.check_stad_status(self.stad)
-            if self.stad_status == 1:
-                self.update_attestation(columns='stadium_status', vls='1')
-            self.check_status()
-            if self.status == 1:
-                self.update_attestation(columns='status', vls='1')
-            cursor.execute(query)
-            conn.commit()
         for i in range(len(columns)):
-            setattr(self, columns[i], int(vls[i]))
+            setattr(self, columns[i], vls[i])
+        self.check_stad_status()
+        self.check_status()
+        quer_vls=f"club_id={self.club_id},`year`='{self.year}',application_1='{self.application_1}'," \
+                 f"application_2='{self.application_2}',application_3='{self.application_3}' ," \
+                 f"application_4='{self.application_4}' ,application_5='{self.application_5}' ," \
+                 f"reg_in_min_just='{self.reg_in_min_just}' ,reg_in_tax='{self.reg_in_tax}' ," \
+                 f"creat_club='{self.creat_club}',ustav='{self.ustav}' ,creat_rucovod='{self.creat_rucovod}' ," \
+                 f"ofice='{self.ofice}' ,stadium='{self.stad_id}' ,document='{self.document}' ," \
+                 f"document_until='{self.document_until}' ,stadium_status='{self.stad_status}' ," \
+                 f"status'='{self.status}'"
+        query = f"UPDATE attestation SET {quer_vls} WHERE id={self.id}"
+        cursor.execute(query)
+        conn.commit()
+
