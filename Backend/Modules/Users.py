@@ -76,7 +76,15 @@ def connect(func):
             # print('Соединение закрыто.')
 
     return (wrapper)
-
+@connect
+def check_user_id():
+    query = "select max(id) from  users;"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    # start_user = User('стартовый юзер')
+    # setattr(start_user, 'users_id', rows[0][0])
+    # setattr(start_user, 'user_id', rows[0][0])
+    return rows[0][0]
 
 class User:
     users_id = 1
@@ -156,7 +164,8 @@ class Club:
         self.ofice = ofice
         self.attestations={}
         self.user_club = User('Клуб')
-        self.user_club.add_to_db()
+        print(self.user_club.user_id)
+        # self.user_club.add_to_db()
 
     @connect
     def add_to_db(self):

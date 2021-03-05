@@ -10,7 +10,7 @@ from UI.Start_UI import *
 # x.attestations[2021].add_to_db()
 
 #Запускаем Интерфейс
-app = QtWidgets.QApplication([])
-application = mywindow()
-application.show()
-sys.exit(app.exec())
+# app = QtWidgets.QApplication([])
+# application = mywindow()
+# application.show()
+# sys.exit(app.exec())

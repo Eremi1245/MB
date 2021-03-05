@@ -1,6 +1,16 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from Backend.Modules.Users import *
 
+start_user = User('стартовый юзер')
+print(start_user.user_id,start_user.users_id)
+setattr(start_user, 'users_id', check_user_id())
+setattr(start_user, 'user_id', check_user_id())
+print(start_user.user_id,start_user.users_id)
+start=User('Пробная хуйня')
+print(start.user_id,start.users_id)
+x=Club('Клуб')
+
+
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
