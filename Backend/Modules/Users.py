@@ -1,7 +1,10 @@
-# 2.	Класс Клуб (юзер)
-# 3.	Класс Штат(юзер)
-# 4.	Класс тренер(штат)
-# 5.	Класс Стадион(юзер)
+'''
+
+'''
+
+
+
+
 # 6.	Класс Заседание КДК (юзер)
 # 7.	Класс текстовый документ КДК (
 # Функция создать
@@ -41,12 +44,19 @@ def read_db_config(filename=path_to_db, section='mysql'):
 
     return db
 
+def search_id_User():
+    query=f'select max(id) from users;'
+    cursor.execute(query)
+    rows = cursor.fetchall()[0][0]
+    return rows
+
 
 db_config = read_db_config()
 
 conn = mysql.connector.connect(**db_config)
 
 cursor = conn.cursor()
+
 
 
 def connect(func):
@@ -76,23 +86,15 @@ def connect(func):
             # print('Соединение закрыто.')
 
     return (wrapper)
-@connect
-def check_user_id():
-    query = "select max(id) from  users;"
-    cursor.execute(query)
-    rows = cursor.fetchall()
-    # start_user = User('стартовый юзер')
-    # setattr(start_user, 'users_id', rows[0][0])
-    # setattr(start_user, 'user_id', rows[0][0])
-    return rows[0][0]
+
+users=[]
 
 class User:
-    users_id = 1
 
     def __init__(self, type):
         self.type = type
-        self.user_id = User.users_id
-        User.users_id += 1
+        self.user_id = len(users)+1
+        users.append(self)
 
     @connect
     def add_to_db(self):
@@ -164,8 +166,7 @@ class Club:
         self.ofice = ofice
         self.attestations={}
         self.user_club = User('Клуб')
-        print(self.user_club.user_id)
-        # self.user_club.add_to_db()
+        self.user_club.add_to_db()
 
     @connect
     def add_to_db(self):
