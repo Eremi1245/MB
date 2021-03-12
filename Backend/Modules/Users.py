@@ -44,13 +44,6 @@ def read_db_config(filename=path_to_db, section='mysql'):
 
     return db
 
-def search_id_User():
-    query=f'select max(id) from users;'
-    cursor.execute(query)
-    rows = cursor.fetchall()[0][0]
-    return rows
-
-
 db_config = read_db_config()
 
 conn = mysql.connector.connect(**db_config)

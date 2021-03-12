@@ -1,9 +1,9 @@
 import sys
 import os
-print(os.getcwd())
-# from ..Backend.Modules.Users import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton,QCommandLinkButton
+from Backend.Modules.Users import *
+
 
 class WindowClub(QWidget):
     def __init__(self):
@@ -335,6 +335,7 @@ class WindowClub(QWidget):
         self.creat_club_3.setStyleSheet("\n"
                                         "background-color: rgb(85, 255, 127);")
         self.creat_club_3.setObjectName("creat_club_3")
+        self.creat_club_3.clicked.connect(self.creat_club_real)
 
         self.retranslateUi(self)
         QtCore.QMetaObject.connectSlotsByName(self)
@@ -364,6 +365,34 @@ class WindowClub(QWidget):
         self.reg_in_min_just_6.setText(_translate("Creat_Club", "протокол о назначении руководителя"))
         self.reg_in_min_just_10.setText(_translate("Creat_Club", "офис"))
         self.creat_club_3.setText(_translate("Creat_Club", "Создать"))
+
+    def creat_club_real(self):
+        name=self.textname.toPlainText()
+        shrt_name=self.textshrt_name.toPlainText()
+        o_p_f=self.texto_p_f.toPlainText()
+        jur_addr=self.textjur_addr.toPlainText()
+        phone=self.textphone.toPlainText()
+        site=self.textsite.toPlainText()
+        email=self.textemail.toPlainText()
+        inn=self.textinn.toPlainText()
+        kpp=self.textkpp.toPlainText()
+        okpo=self.textokpo.toPlainText()
+        ogrn=self.textogrn.toPlainText()
+        bank_name=self.textbank_name.toPlainText()
+        cor_ac=self.textcor_ac.toPlainText()
+        check_ac=self.textcheck_ac.toPlainText()
+        bik=self.textbik.toPlainText()
+        ustav=self.textustav.toPlainText()
+        reg_in_min_just=self.textreg_in_min_just.toPlainText()
+        reg_in_tax=self.textreg_in_tax.toPlainText()
+        creat_club=self.textcreat_club.toPlainText()
+        reg_in_min_just_6 = self.textreg_in_min_just_3.toPlainText()
+        reg_in_min_just_10 = self.textreg_in_min_just_5.toPlainText()
+        club=Club(name,shrt_name,o_p_f,jur_addr,phone,site,email,inn,kpp,okpo,ogrn,bank_name,
+                      cor_ac,check_ac,bik,ustav,
+                      reg_in_min_just,reg_in_tax,creat_club,reg_in_min_just_6,reg_in_min_just_10)
+        club.add_to_db()
+        print('Клуб создан')
 
 class WindowStadium(QWidget):
     def __init__(self):
@@ -683,9 +712,6 @@ class WindowStadium(QWidget):
         act_categ=self.textact_categ.toPlainText()
         act_categ_date_until=self.textact_categ_date_until.toPlainText()
         statd_plan=self.textstatd_plan.toPlainText()
-        print(name,shrt_name,o_p_f,jur_addr,phone,site,email,inn,kpp,okpo,ogrn,in__Reg_stad,
-              conf_in_expluatation,instr_pub_order,instr_pub_order_date_until,act_categ,
-              act_categ_date_until,statd_plan)
         stad=Stadium(name,shrt_name,o_p_f,jur_addr,phone,site,email,inn,kpp,okpo,ogrn,in__Reg_stad,
                       conf_in_expluatation,instr_pub_order,instr_pub_order_date_until,act_categ,
                       act_categ_date_until,statd_plan)
