@@ -29,17 +29,42 @@ CREATE TABLE clubs (
 	cor_ac BIGINT,
 	check_ac BIGINT,
 	bik BIGINT,
-	ustav tinyint,
-	reg_in_min_just tinyint,
-	reg_in_tax tinyint,
-	creat_club tinyint,
-	creat_rucovod tinyint,
-	ofice tinyint,
+	ustav tinyint default 0,
+	reg_in_min_just tinyint default 0,
+	reg_in_tax tinyint default 0,
+	creat_club tinyint default 0,
+	creat_rucovod tinyint default 0,
+	ofice tinyint default 0,
+	club_status VARCHAR(255) default 'not allowed to compete',
     first_registration DATETIME DEFAULT NOW(),
 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (club_id) REFERENCES users(id)
     ) COMMENT 'профили Клубов';
     
+delimiter // 
+drop trigger if exists club_stat//
+CREATE TRIGGER club_stat BEFORE insert ON clubs
+FOR each row 
+	begin
+		if 	new.ustav=1 AND new.reg_in_min_just  = 1 AND new.reg_in_tax=1 AND new.creat_club=1 
+		AND new.creat_rucovod=1 and new.ofice = 1
+		then SET new.club_status = 'admitted to the competition';	
+		end if;
+END//
+delimiter ;
+
+delimiter // 
+drop trigger if exists update_club_stat//
+CREATE TRIGGER update_club_stat BEFORE update ON clubs
+FOR each row 
+	begin
+		if 	new.ustav=1 AND new.reg_in_min_just  = 1 AND new.reg_in_tax=1 AND new.creat_club=1 
+		AND new.creat_rucovod=1 and new.ofice = 1
+		then SET new.club_status = 'admitted to the competition';	
+		end if;
+END//
+delimiter ;
+   
 DROP TABLE IF EXISTS club_state;
 CREATE TABLE club_state (
 	user_id BIGINT UNSIGNED NOT null,
@@ -74,13 +99,13 @@ CREATE TABLE stadiums (
 	kpp bigint,
 	okpo bigint,
 	ogrn bigint,
-	in__Reg_stad tinyint default '0' COMMENT 'В реестре объектов спорта',
-	conf_in_expluatation tinyint default '0' COMMENT 'Введен в эксплуатацию',
-	instr_pub_order tinyint default '0' COMMENT 'Инструкция по обеспечению безопасности',
+	in__Reg_stad tinyint default 0 COMMENT 'В реестре объектов спорта',
+	conf_in_expluatation tinyint default 0 COMMENT 'Введен в эксплуатацию',
+	instr_pub_order tinyint default 0 COMMENT 'Инструкция по обеспечению безопасности',
 	instr_pub_order_date_until Date,
-	act_categ  tinyint default '0' COMMENT 'Акт обследования и категорирования',
+	act_categ  tinyint default 0 COMMENT 'Акт обследования и категорирования',
 	act_categ_date_until Date,
-	statd_plan  tinyint default '0' COMMENT 'План стадиона',
+	statd_plan  tinyint default 0 COMMENT 'План стадиона',
 	category_RFS VARCHAR(255) default 'no category',
 	status VARCHAR(255) default 'not allowed to compete',
     first_registration DATETIME DEFAULT NOW(),
@@ -89,13 +114,47 @@ CREATE TABLE stadiums (
     ) COMMENT 'Стадионы';
     
 delimiter // 
-drop trigger if exists auto_chanch_status_stad_after_insert//
-CREATE TRIGGER auto_chanch_status_stad_after_insert after insert ON stadiums 
+drop trigger if exists stadium_status//
+CREATE TRIGGER stadium_status BEFORE insert ON stadiums
 FOR each row 
 	begin
-		if 	in__Reg_stad = '1' AND conf_in_expluatation='1' AND instr_pub_order='1' AND act_categ='1' AND statd_plan='1'
-			and instr_pub_order_date_until>now() and act_categ_date_until>now() and category_RFS != 'no category'
-		then UPDATE stadiums SET status = 'admitted to the competition';	
+		if 	new.in__Reg_stad=1 AND new.conf_in_expluatation  = 1 AND new.instr_pub_order=1 AND new.act_categ=1 
+		AND new.statd_plan=1 and new.instr_pub_order_date_until>now() and new.act_categ_date_until>now() 
+		and new.category_RFS != 'no category'
+		then SET new.status = 'admitted to the competition';	
 		end if;
 END//
 delimiter ;
+
+delimiter // 
+drop trigger if exists update_stadium_status//
+CREATE TRIGGER update_stadium_status before update ON stadiums
+FOR each row 
+	begin
+		if 	new.in__Reg_stad=1 AND new.conf_in_expluatation  = 1 AND new.instr_pub_order=1 AND new.act_categ=1 
+		AND new.statd_plan=1 and new.instr_pub_order_date_until>now() and new.act_categ_date_until>now() 
+		and new.category_RFS != 'no category'
+		then SET new.status = 'admitted to the competition';	
+		end if;
+END//
+delimiter ;
+
+DROP TABLE IF EXISTS attestation;
+CREATE TABLE attestation (
+	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
+	club_id BIGINT UNSIGNED NOT NULL,
+	club_status tinyint default 0 COMMENT 'Статус клуба подтягивается из клуба',
+	`year` int,
+	application_1 tinyint default 0 COMMENT 'Заявление о процедуре аттестации',
+	application_2 tinyint default 0 COMMENT 'О проведении политики ',
+	application_3 tinyint default 0 COMMENT 'Соблюдение регламентов',
+	application_4 tinyint default 0 COMMENT 'Список сотрудников',
+	application_5 tinyint default 0 COMMENT 'Гарантийное письмо',
+	stadium BIGINT UNSIGNED NOT NULL,
+	stadium_status tinyint default 0 COMMENT 'Статус стадиона подтягивается из стадиона',
+	document VARCHAR(255),
+	document_until Date,
+	att_status tinyint default 0,
+	FOREIGN KEY (club_id) REFERENCES clubs(club_id),
+	FOREIGN KEY (stadium) REFERENCES stadiums(stad_id)
+	) COMMENT 'Аттестация';
