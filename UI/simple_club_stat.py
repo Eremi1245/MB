@@ -1,16 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from Backend.Modules.Users import *
 
-start_user = User('стартовый юзер')
-print(start_user.user_id,start_user.users_id)
-setattr(start_user, 'users_id', check_user_id())
-setattr(start_user, 'user_id', check_user_id())
-print(start_user.user_id,start_user.users_id)
-start=User('Пробная хуйня')
-print(start.user_id,start.users_id)
-x=Club('Клуб')
-
-
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
@@ -158,6 +148,7 @@ class Ui_mainWindow(object):
         self.creat_club = QtWidgets.QPushButton(self.centralwidget)
         self.creat_club.setGeometry(QtCore.QRect(310, 730, 211, 41))
         self.creat_club.setObjectName("creat_club")
+        self.creat_club.clicked.connect(self.start_club)
 
 
 
@@ -228,8 +219,8 @@ class Ui_mainWindow(object):
         self.site_2 = QtWidgets.QLabel(self.gridLayoutWidget_2)
         self.site_2.setObjectName("site_2")
         self.gridLayout_2.addWidget(self.site_2, 2, 3, 1, 1)
-        self.in__Reg_stad_2 = QtWidgets.QLabel(self.gridLayoutWidget_2)
-        self.in__Reg_stad_2.setObjectName("in__Reg_stad_2")
+        self.bank_name = QtWidgets.QLabel(self.gridLayoutWidget_2)
+        self.bank_name.setObjectName("bank_name")
         self.gridLayout_2.addWidget(self.in__Reg_stad_2, 4, 7, 1, 1)
         self.textemail_2 = QtWidgets.QTextEdit(self.gridLayoutWidget_2)
         self.textemail_2.setObjectName("textemail_2")
@@ -359,3 +350,52 @@ class Ui_mainWindow(object):
                       act_categ_date_until,statd_plan)
         stad.add_to_db()
         print('Стадион создан')
+
+    def creat_clubs(self):
+        name_2 = self.self.name_2.toPlainText()
+        shrt_name_2 = self.textshrt_name_2.toPlainText()
+        o_p_f_2 = self.texto_p_f_2.toPlainText()
+        jur_addr_2 = self.textjur_addr_2.toPlainText()
+        phone_2 = self.textphone_2.toPlainText()
+        site_2 = self.textsite_2.toPlainText()
+        email_2 = self.textemail_2.toPlainText()
+        inn_2 = self.textinn_2.toPlainText()
+        kpp_2 = self.textkpp_2.toPlainText()
+        okpo_2 = self.textokpo_2.toPlainText()
+        ogrn_2 = self.textogrn_2.toPlainText()
+        bank_name = self.textbank_name.toPlainText()
+        cor_ac = self.texcor_ac.toPlainText()
+        check_ac = self.textcheck_ac.toPlainText()
+        bik = self.textbik.toPlainText()
+        ustav = self.textustav.toPlainText()
+        reg_in_min_just = self.textreg_in_min_just.toPlainText()
+        reg_in_tax = self.textreg_in_tax.toPlainText()
+        creat_club= self.textcreat_club.toPlainText()
+        creat_rucovod= self.textcreat_club.toPlainText()
+        ofice= self.textcreat_club.toPlainText()
+        print(name_2, shrt_name_2, o_p_f_2, jur_addr_2, phone_2, site_2, email_2, inn_2, kpp_2,
+                           okpo_2, ogrn_2, bank_name, cor_ac, check_ac, bik, ustav,reg_in_min_just, reg_in_tax,
+                           creat_club,creat_rucovod,ofice)
+        club = Club(name_2, shrt_name_2, o_p_f_2, jur_addr_2, phone_2, site_2, email_2, inn_2, kpp_2,
+                           okpo_2, ogrn_2, bank_name, cor_ac, check_ac, bik, ustav,reg_in_min_just, reg_in_tax,
+                           creat_club,creat_rucovod,ofice)
+        club.add_to_db()
+        print('Клуб создан')
+
+    def start_club():
+        app = QtWidgets.QApplication([])
+        application1 = WindowCreatClub()
+        application1.show()
+        sys.exit(app.exec())
+
+class WindowCreatClub(object):
+    def setupUi(self, mainWindow):
+            mainWindow.setObjectName("New club")
+            mainWindow.resize(400, 400)
+            mainWindow.setWindowTitle("Новый клуб")
+            self.retranslateUi(MainWindow)
+            QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, mainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("New club", "New club"))
