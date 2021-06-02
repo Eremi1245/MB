@@ -158,3 +158,28 @@ CREATE TABLE attestation (
 	FOREIGN KEY (club_id) REFERENCES clubs(club_id),
 	FOREIGN KEY (stadium) REFERENCES stadiums(stad_id)
 	) COMMENT 'Аттестация';
+
+
+CREATE OR REPLACE VIEW status_club_info as select club_id,club_status 
+from clubs;
+
+CREATE OR REPLACE VIEW status_stad_info as select stad_id,status 
+from stadiums;
+
+
+delimiter // 
+drop trigger if exists autofill//
+CREATE TRIGGER autofill before update ON attestation
+FOR each row 
+	begin
+		set @a=club_id ;
+		set @b=stadium;
+		if (select club_status from status_club_info where club_id=a) = 'admitted to the competition' then 
+		SET new.club_status = 1;
+		end if;
+		if (select status from status_stad_info where stad_id=b) = 'admitted to the competition' then 
+		SET new.stadium_status = 1;
+		end if;
+END//
+delimiter ;
+
