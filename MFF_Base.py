@@ -1,25 +1,7 @@
-# from Backend.Modules.Users import *
-from UI.Start_UI import *
+from Backend.Modules.Users2 import *
 
-
-x=Club('ЦСКА')
-x.add_to_db()
-# stad=Stadium('Спартаковец')
-# stad.add_to_db()
-# # x.attestation(stad,2021,'2020-02-02')
-# # x.attestations[2021].add_to_db()
-# print(users)
-
-<<<<<<< HEAD
-# Запускаем Интерфейс
-# app = QtWidgets.QApplication([])
-# application = mywindow()
-# application.show()
-# sys.exit(app.exec())
-=======
-#Запускаем Интерфейс
-app = QApplication(sys.argv)
-w = MainWindow()
-w.show()
-sys.exit(app.exec_())
->>>>>>> 45d84b1fe7449741d17c37908fb2ff715105eb5e
+club = Club('ЦСКА', 'fdsf', 'fdsf', 'fdsf', 'fdsf', 'fdsf', 'fdsf', 'fdsf', 1234, 1234, 1234, 1234, 'dfdfs', 1234, 1234,
+            1234, 1, 1, 1, 1, 1, 1)
+stad = Stadium('Спартаковец', 'fsdfs', 'fsdfs', 'fsdfs', 'fsdfs', 'fsdfs', 'fsdfs', 1234, 123, 123, 123,
+               1, 1, 1, '2021-06-18', 1, '2021-06-18', 1, 'hgfhf')
+attet = Attestation(club, stad, 2020, 1, 1, 1, 1, 1, 'contract', '2021-06-18')

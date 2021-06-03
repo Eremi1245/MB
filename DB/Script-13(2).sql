@@ -204,3 +204,15 @@ delimiter ;
 
 
 
+DROP TABLE IF EXISTS KDK;
+CREATE TABLE KDK (
+	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
+	club_id BIGINT UNSIGNED NOT NULL,
+	case_number VARCHAR(255) NOT null,
+	date_meeting date NOT null,
+	sanction VARCHAR(255) default 'None',
+	first_registration DATETIME DEFAULT NOW(),
+	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+	FOREIGN KEY (club_id) REFERENCES clubs(club_id)
+	) COMMENT 'Аттестация';
+
