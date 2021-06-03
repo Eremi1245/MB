@@ -152,8 +152,8 @@ CREATE TABLE attestation (
 	application_5 tinyint default 0 COMMENT 'Гарантийное письмо',
 	stadium BIGINT UNSIGNED NOT NULL,
 	stadium_status tinyint default 0 COMMENT 'Статус стадиона подтягивается из стадиона',
-	document VARCHAR(255),
-	document_until Date,
+	document VARCHAR(255) default 'None',
+	document_until Date default '0000-00-00',
 	att_status tinyint default 0,
 	FOREIGN KEY (club_id) REFERENCES clubs(club_id),
 	FOREIGN KEY (stadium) REFERENCES stadiums(stad_id)
@@ -169,17 +169,38 @@ from stadiums;
 
 delimiter // 
 drop trigger if exists autofill//
-CREATE TRIGGER autofill before update ON attestation
+CREATE TRIGGER autofill before insert ON attestation
 FOR each row 
 	begin
-		set @a=club_id ;
-		set @b=stadium;
-		if (select club_status from status_club_info where club_id=a) = 'admitted to the competition' then 
+		set @a=new.club_id ;
+		set @b=new.stadium;
+		if (select club_status from status_club_info where club_id=@a) = 'admitted to the competition' then 
 		SET new.club_status = 1;
 		end if;
-		if (select status from status_stad_info where stad_id=b) = 'admitted to the competition' then 
+		if (select status from status_stad_info where stad_id=@b) = 'admitted to the competition' then 
 		SET new.stadium_status = 1;
+		end if;
+		if new.club_status=1 and new.application_1=1 and new.application_2=1 and new.application_3=1 and 
+		new.application_4 and 
+		new.application_5=1 and new.stadium_status=1 and new.document_until>now() then 
+		set new.att_status=1;
 		end if;
 END//
 delimiter ;
+
+
+delimiter // 
+drop trigger if exists autofill_2//
+CREATE TRIGGER autofill_2 before update ON attestation
+FOR each row 
+	begin
+		if new.club_status=1 and new.application_1=1 and new.application_2=1 and new.application_3=1 and 
+		new.application_4 and 
+		new.application_5=1 and new.stadium_status=1 and new.document_until>now() then 
+		set new.att_status=1;
+		end if;
+END//
+delimiter ;
+
+
 
