@@ -66,15 +66,24 @@ def connect(func):
     return wrapper
 
 
-users = []
+@connect
+def user_number():
+    query = 'select COUNT(id) from users;'
+    cursor.execute(query)
+    number = cursor.next()[0]
+    return number
+
+
+users = user_number()
 
 
 class User:
 
     def __init__(self, type_of_user):
+        global users
         self.type_of_user = type_of_user
-        self.user_id = len(users) + 1
-        users.append(self)
+        self.user_id = users + 1
+        users += 1
 
     @connect
     def add_to_db(self):

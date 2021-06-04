@@ -34,8 +34,6 @@ conn = mysql.connector.connect(**db_config)
 
 cursor = conn.cursor()
 
-
-
 def connect(func):
     """Подключение в БД """
 
@@ -64,14 +62,21 @@ def connect(func):
 
     return (wrapper)
 
-users=[]
+@connect
+def user_number(self):
+    query = 'select COUNT(id) from users'
+    s=cursor.execute(query)
+    print(s)
+    conn.commit()
+
+user_number()
+users=0
 
 class User:
 
     def __init__(self, type):
         self.type = type
-        self.user_id = len(users)+1
-        users.append(self)
+        self.user_id = users+1
 
     @connect
     def add_to_db(self):
