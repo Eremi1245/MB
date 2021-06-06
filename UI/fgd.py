@@ -1,7 +1,7 @@
 #! python3
 import openpyxl,os,sys,shutil,time,subprocess,pyperclip,tkinter,random,docx,threading,webbrowser
 from openpyxl.styles import Font
-from tkinter import*
+from tkinter import *
 from PIL import ImageTk,Image
 import requests
 from lxml import etree

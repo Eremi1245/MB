@@ -70,7 +70,7 @@ def connect(func):
 def user_number():
     query = 'select COUNT(id) from users;'
     cursor.execute(query)
-    number = cursor.next()[0]
+    number = cursor.fetchone()[0]
     return number
 
 

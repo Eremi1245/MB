@@ -1,22 +1,15 @@
-#! python3
-import openpyxl,os,sys,shutil,time,subprocess,pyperclip,tkinter,random,docx,threading,webbrowser
-from openpyxl.styles import Font
-from tkinter import*
-from PIL import ImageTk,Image
-import requests
-from lxml import etree
-import lxml.html
-import csv
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-cvet='#011128'
-Style=("Arial", 9)
-# ИНТЕРФЕЙС
-# №1 ОКНО
-window=Tk()
-window.title('База команд МФФ')
-window.geometry('1366x768')
-image1 = ImageTk.PhotoImage(Image.open('oboi.jpg'))
-bg_label = tkinter.Label(window, image = image1)
-bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-window.mainloop()
+from tkinter import *
+from stadium import *
+from club import *
+
+main_menu=Tk()
+main_menu.title('База команд МФФ')
+main_menu.geometry('1366x768')
+search = Entry()
+search.grid(row=0, column=2)
+add_stadium = Button( text="Добавить стадион",command=window_of_stadium)
+add_stadium.grid(row=0, column=0)
+add_club = Button( text="Добавить клуб",command=window_of_club)
+add_club.grid(row=0, column=1)
+main_menu.mainloop()
+
