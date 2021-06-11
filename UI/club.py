@@ -53,7 +53,7 @@ def window_of_club():
             new_user_label = Label(window,
                                    text=f'Клуб {all_txt_items["Сокращенное наименование"].get("1.0", END)} создан '
                                         f'и добавлен в базу, номер id - {new_user.user_club.user_id}',
-                                   width=35, height=3, background='green', anchor=W, wraplength=180, justify=LEFT)
+                                   width=35, height=5, background='green', anchor=W, wraplength=180, justify=LEFT)
             new_user_label.grid(row=2, column=5, sticky=W)
         except Exception as er:
             new_user_label = Label(window,

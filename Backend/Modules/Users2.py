@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 from os import getcwd
 from datetime import datetime as dt
+from Backend.Modules.Kdk_modul import *
 
 if __name__ == '__main__':
     path_to_db = getcwd()[0:-16] + '\\DB\\db_config.ini'
