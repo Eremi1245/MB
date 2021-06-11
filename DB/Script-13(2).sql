@@ -168,9 +168,12 @@ from stadiums;
 
 CREATE OR REPLACE VIEW info_about_all_users as 
 select a.id,
-(case when a.users_type='Клуб' then b.shrt_name else c.shrt_name end) name
+(case when a.users_type='Клуб' then b.shrt_name else c.shrt_name end) name,
+(case when a.users_type='Клуб' then b.site else c.site end) site,
+(case when a.users_type='Клуб' then b.email else c.email end) email,
+(case when a.users_type='Клуб' then b.club_status else c.status end) status
 from users a left join clubs b on a.id=b.club_id 
-left join stadiums c on a.id=c.stad_id ;
+left join stadiums c on a.id=c.stad_id;
 
 
 delimiter // 

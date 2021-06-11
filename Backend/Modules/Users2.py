@@ -75,6 +75,8 @@ def user_number():
 
 
 users = user_number()
+if users is None:
+    users = 0
 
 
 class User:
