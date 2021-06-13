@@ -216,12 +216,72 @@ delimiter ;
 DROP TABLE IF EXISTS KDK;
 CREATE TABLE KDK (
 	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
-	club_id BIGINT UNSIGNED NOT NULL,
-	case_number VARCHAR(255) NOT null,
 	date_meeting date NOT null,
-	sanction VARCHAR(255) default 'None',
+	notes text,
+	first_registration DATETIME DEFAULT NOW(),
+	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+	) COMMENT 'КДК';
+
+CREATE INDEX date_meeting ON KDK(date_meeting);
+
+
+DROP TABLE IF EXISTS Cases;
+CREATE TABLE Cases (
+	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
+	meeting_id BIGINT UNSIGNED NOT NULL,
+	date_meeting date NOT null,
+	case_number VARCHAR(255),
+	time_meeting time default '12:00:00',
+	potential_art VARCHAR(255),
+	notes text,
 	first_registration DATETIME DEFAULT NOW(),
 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
-	FOREIGN KEY (club_id) REFERENCES clubs(club_id)
-	) COMMENT 'Аттестация';
+	FOREIGN KEY (meeting_id) REFERENCES KDK(id),
+	FOREIGN KEY (date_meeting) REFERENCES KDK(date_meeting)
+	) COMMENT 'Дела';
 
+CREATE INDEX case_number ON Cases(case_number);
+
+DROP TABLE IF EXISTS ClubMembersOfMeeting;
+CREATE TABLE ClubMembersOfMeeting (
+	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
+	case_id BIGINT UNSIGNED NOT NULL,
+	club_member_id BIGINT UNSIGNED NOT NULL,
+	first_registration DATETIME DEFAULT NOW(),
+	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+	FOREIGN KEY (case_id) REFERENCES Cases(meeting_id),
+	FOREIGN KEY (club_member_id) REFERENCES clubs(club_id)
+	) COMMENT 'Участники Заседаний';
+
+DROP TABLE IF EXISTS MembersOfMeeting;
+CREATE TABLE MembersOfMeeting (
+	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
+	case_id BIGINT UNSIGNED NOT NULL,
+	member_id BIGINT UNSIGNED NOT NULL,
+	first_registration DATETIME DEFAULT NOW(),
+	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+	FOREIGN KEY (case_id) REFERENCES Cases(meeting_id),
+	FOREIGN KEY (member_id) REFERENCES club_state(user_id)
+	) COMMENT 'Участники Заседаний';
+
+
+DROP TABLE IF EXISTS Notifications_Cases;
+CREATE TABLE Notifications_Cases (
+	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
+	case_id BIGINT UNSIGNED NOT NULL,
+	notification text,
+	first_registration DATETIME DEFAULT NOW(),
+	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+	FOREIGN KEY (case_id) REFERENCES Cases(meeting_id)
+	) COMMENT 'Уведомления';
+
+
+DROP TABLE IF EXISTS Decisions_Cases;
+CREATE TABLE Decisions_Cases (
+	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
+	case_id BIGINT UNSIGNED NOT NULL,
+	decision text,
+	first_registration DATETIME DEFAULT NOW(),
+	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+	FOREIGN KEY (case_id) REFERENCES Cases(meeting_id)
+	) COMMENT 'Решения';

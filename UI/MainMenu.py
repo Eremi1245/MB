@@ -4,15 +4,20 @@ if __name__ == '__main__':
     from stadium import *
     from club import *
     from kdk import *
+    from CaseGui import *
     from Backend.Modules.Users2 import *
+    from os import *
 else:
     from tkinter import *
     from tkinter import ttk
     from UI.stadium import *
     from UI.club import *
     from UI.kdk import *
+    from UI.CaseGui import *
     from Backend.Modules.Users2 import *
+    from os import *
 
+esc_num=115
 
 def start():
     main_menu = Tk()
@@ -26,11 +31,49 @@ def start():
         number = cursor.fetchall()
         return number
 
+    def show_users(count):
+        try:
+            for i in users_info():
+                lbl = Label(frame_lables, text=f'{i[0]}')
+                lbl.grid(column=0, row=count)
+                lbl = Label(frame_lables, text=f'{i[1]}')
+                lbl.grid(column=1, row=count)
+                lbl = Label(frame_lables, text=f'{i[2]}')
+                lbl.grid(column=2, row=count)
+                lbl = Label(frame_lables, text=f'{i[3]}')
+                lbl.grid(column=3, row=count)
+                lbl = Label(frame_lables, text=f'{i[4]}')
+                lbl.grid(column=4, row=count)
+                btn_info = Button(frame_lables, text="Смотреть", command=check_club)
+                btn_info.grid(column=5, row=count)
+                btn_del = Button(frame_lables, text="Удалить", command=del_club)
+                btn_del.grid(column=6, row=count)
+                count += 1
+        except TypeError as err:
+            print(f'Ошибка {err}')  # забить в логи
+
     def check_club():
         pass
 
     def del_club():
         pass
+
+    def meeting_info():
+        meetings=listdir(getcwd()+'\\MFF_Base\\КДК')
+        print(meetings)
+        for meet in range(len(meetings)):
+            lbl = Label(frame_meeting, text=f'{meetings[meet]}')
+            lbl.grid(column=0, row=1)
+            lbl = Label(frame_meeting, text='')
+            lbl.grid(column=1, row=1)
+            # txt_col = Text(window, width=30, height=3, wrap=WORD)
+            # txt_col.grid(row=txt, column=1)
+
+    def update():
+        main_menu.update()
+        show_users(1)
+        meeting_info()
+
 
     search = Entry()
     search.grid(row=0, column=2)
@@ -40,6 +83,8 @@ def start():
     add_club.grid(row=0, column=1)
     add_club = Button(text="Добавить Заседание КДК", command=window_of_kdk)
     add_club.grid(row=0, column=2)
+    update_button=Button(text="Обновить", command=update)
+    update_button.grid(row=0, column=3)
     tab_control = ttk.Notebook(main_menu)
     # Вкладки
     tab_of_users = ttk.Frame(tab_control, width=560, height=560)
@@ -70,26 +115,7 @@ def start():
     lbl.grid(column=4, row=0)
     lbl = Label(frame_lables, text='Инфо')
     lbl.grid(column=5, row=0)
-    count_of_row = 1
-    try:
-        for i in users_info():
-            lbl = Label(frame_lables, text=f'{i[0]}')
-            lbl.grid(column=0, row=count_of_row)
-            lbl = Label(frame_lables, text=f'{i[1]}')
-            lbl.grid(column=1, row=count_of_row)
-            lbl = Label(frame_lables, text=f'{i[2]}')
-            lbl.grid(column=2, row=count_of_row)
-            lbl = Label(frame_lables, text=f'{i[3]}')
-            lbl.grid(column=3, row=count_of_row)
-            lbl = Label(frame_lables, text=f'{i[4]}')
-            lbl.grid(column=4, row=count_of_row)
-            btn_info = Button(frame_lables, text="Смотреть", command=check_club)
-            btn_info.grid(column=5, row=count_of_row)
-            btn_del = Button(frame_lables, text="Удалить", command=del_club)
-            btn_del.grid(column=6, row=count_of_row)
-            count_of_row += 1
-    except TypeError as err:
-        print(f'Ошибка {err}')  # забить в логи
+    show_users(1)
 
     main_menu.update()
     canvas.config(scrollregion=canvas.bbox("all"))
@@ -102,6 +128,27 @@ def start():
 
     tab_control.add(tab_of_kdk, text='КДК')
     tab_control.grid(row=1, rowspan=5, column=0, columnspan=5)
+
+    canvas_kdk = Canvas(tab_of_kdk, width=560, height=560)
+    canvas_kdk.grid(row=0, column=0, sticky="news")
+    # Link a scrollbar to the canvas
+    vsb = Scrollbar(tab_of_kdk, orient="vertical", command=canvas.yview)
+    vsb.grid(row=0, column=1, sticky='ns')
+    canvas_kdk.configure(yscrollcommand=vsb.set)
+    frame_meeting = Frame(canvas_kdk, width=560, height=560)
+    canvas_kdk.create_window((0, 0), window=frame_meeting, anchor='nw')
+    lbl = Label(frame_meeting, text='Заседание')
+    lbl.grid(column=0, row=0)
+    lbl = Label(frame_meeting, text='Решения')
+    lbl.grid(column=1, row=0)
+    lbl = Label(frame_meeting, text='Заметки')
+    lbl.grid(column=2, row=0)
+    meeting_info()
+    add_button=Button(frame_meeting,text="Добавить заседание", command=window_of_case)
+    add_button.grid(column=3, row=0)
+    main_menu.update()
+    canvas_kdk.config(scrollregion=canvas.bbox("all"))
+
 
     tab_control.add(tab_of_penalty, text='Штрафы')
     tab_control.grid(row=1, rowspan=5, column=0, columnspan=5)
