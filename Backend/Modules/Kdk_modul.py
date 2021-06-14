@@ -27,7 +27,8 @@ if __name__ == '__main__':
 else:
     path_to_db = getcwd() + '\\DB\\db_config.ini'
 
-home_cwd=getcwd()
+home_cwd = getcwd()
+
 
 def read_db_config(filename=path_to_db, section='mysql'):
     """ Читает конфигурацию Базы данных и возвращает словарь с параметрами
@@ -125,7 +126,7 @@ class Notification:
         font_object_3.name = 'Times New Roman'
 
         # Загрузка логотипа и шапки
-        logo = document.add_picture(f'{home_cwd}\\img/mff_logo.png', width=Inches(1.25))
+        document.add_picture(f'{home_cwd}\\img/mff_logo.png', width=Inches(1.25))
         last_paragraph = document.paragraphs[-1]
         last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
@@ -174,14 +175,14 @@ class Notification:
             call_text = document.add_paragraph()
             call_text.add_run(f'Уведомляем Вас, что заседание КДК состоится {self.date} в {self.time} по адресу: '
                               f'город Москва, ул. Радио д.12, стр.2, в помещение конференц-зала, '
-                              f'без вызова заинтересованных лиц.'
-                              , style='DefaultStyle')
+                              f'без вызова заинтересованных лиц.',
+                              style='DefaultStyle')
         else:
             call_text = document.add_paragraph()
             call_text.add_run(f'Уведомляем Вас, что заседание КДК состоится {self.date} в {self.time} по адресу: '
                               f'город Москва, ул. Радио д.12, стр.2, в помещение конференц-зала, '
-                              f'без вызова заинтересованных лиц.'
-                              , style='DefaultStyle')
+                              f'без вызова заинтересованных лиц.',
+                              style='DefaultStyle')
 
         # Обязанность по предоставлению информации
         if self.match_video == 0:
@@ -209,12 +210,11 @@ class Notification:
         # Подпись
         signature_doc = document.add_paragraph()
         signature = signature_doc.add_run(style='DefaultStyle')
-        signature.add_text(f'Секретарь\n'
-                           f'Контрольно - дисциплинарного', )
+        signature.add_text(f'Секретарь\nКонтрольно - дисциплинарного\n')
         signature.alignment = 1
         signature.add_picture(f'{home_cwd}\\img/signature.jpg', width=Inches(1.25))
-        signature.add_text(f'А.Е.Иванов\n'
-                          f'7(905)7630517')
+        signature.add_text(f'       	  А.Е.Иванов\n'
+                           f'7(905)7630517')
 
         # Сохранить документ
         document.save(f'Иcx№{self.esc_num}-{self.member.name}.docx')
@@ -237,8 +237,8 @@ class Decesion:
 
 class Case:
 
-    def __init__(self, meeting_id, date, number, time, members_of_meeting,league,
-                 potential_art,call=0,match_video=0, notes=''):
+    def __init__(self, meeting_id, date, number, time, members_of_meeting, league,
+                 potential_art, call=0, match_video=0, notes=''):
         self.meeting_id = meeting_id
         self.case_id = 0
         self.date = date
@@ -246,9 +246,9 @@ class Case:
         self.time = time
         self.members_of_meeting = members_of_meeting
         self.potential_art = potential_art
-        self.league=league
-        self.call=call
-        self.match_video=match_video
+        self.league = league
+        self.call = call
+        self.match_video = match_video
         self.notes = notes
         self.case_files = ''
         self.my_folder = 0
@@ -267,7 +267,7 @@ class Case:
 
     @connect
     def add_in_base(self):
-        if self.notes=='':
+        if self.notes == '':
             query = f"INSERT INTO Cases(meeting_id,date_meeting,case_number,time_meeting,potential_art) VALUES " \
                     f"({self.meeting_id}, '{self.date}', '{self.number}', '{self.time}', '{self.potential_art}');"
             cursor.execute(query)
@@ -297,7 +297,7 @@ class Case:
                                  self.league, self.my_folder, self.call, self.match_video)
             notif.create_notification()
             notif.add_to_base()
-        self.my_notifications.append(notif)
+            self.my_notifications.append(notif)
 
     def creat_desicion(self):
         pass
@@ -338,9 +338,9 @@ class KDK:
         number = cursor.fetchone()[0]
         self.id = number
 
-    def creat_case(self,number,time,members_of_meeting,league,potential_art,call=0,match_video=0, notes=''):
-        new_case = Case(self.id, self.date, number, time,members_of_meeting,league,
-                 potential_art,call,match_video, notes)
+    def creat_case(self, number, time, members_of_meeting, league, potential_art, call=0, match_video=0, notes=''):
+        new_case = Case(self.id, self.date, number, time, members_of_meeting, league,
+                        potential_art, call, match_video, notes)
         self.cases.append(new_case)
 
     def agenda(self):

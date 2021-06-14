@@ -82,7 +82,6 @@ CREATE TABLE club_state (
 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (user_id) REFERENCES users(id),
 	FOREIGN KEY (club_id) REFERENCES clubs(club_id)
-	
     ) COMMENT 'Штат Клуба';
    
 DROP TABLE IF EXISTS stadiums;

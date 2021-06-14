@@ -7,6 +7,8 @@ if __name__ == '__main__':
     from CaseGui import *
     from Backend.Modules.Users2 import *
     from os import *
+    from pyperclip import copy,paste
+    from functools import partial
 else:
     from tkinter import *
     from tkinter import ttk
@@ -16,6 +18,8 @@ else:
     from UI.CaseGui import *
     from Backend.Modules.Users2 import *
     from os import *
+    from pyperclip import copy, paste
+    from functools import partial
 
 esc_num=115
 
@@ -36,15 +40,16 @@ def start():
             for i in users_info():
                 lbl = Label(frame_lables, text=f'{i[0]}')
                 lbl.grid(column=0, row=count)
-                lbl = Label(frame_lables, text=f'{i[1]}')
-                lbl.grid(column=1, row=count)
-                lbl = Label(frame_lables, text=f'{i[2]}')
-                lbl.grid(column=2, row=count)
-                lbl = Label(frame_lables, text=f'{i[3]}')
-                lbl.grid(column=3, row=count)
-                lbl = Label(frame_lables, text=f'{i[4]}')
-                lbl.grid(column=4, row=count)
-                btn_info = Button(frame_lables, text="Смотреть", command=check_club)
+                f=f'{i[0]}'
+                lbl1 = Label(frame_lables, text=f'{i[1]}')
+                lbl1.grid(column=1, row=count)
+                lbl2 = Label(frame_lables, text=f'{i[2]}')
+                lbl2.grid(column=2, row=count)
+                lbl3 = Label(frame_lables, text=f'{i[3]}')
+                lbl3.grid(column=3, row=count)
+                lbl4 = Label(frame_lables, text=f'{i[4]}')
+                lbl4.grid(column=4, row=count)
+                btn_info = Button(frame_lables, text="Смотреть", command=partial(check_club, lbl.cget("text")))
                 btn_info.grid(column=5, row=count)
                 btn_del = Button(frame_lables, text="Удалить", command=del_club)
                 btn_del.grid(column=6, row=count)
@@ -52,8 +57,11 @@ def start():
         except TypeError as err:
             print(f'Ошибка {err}')  # забить в логи
 
-    def check_club():
-        pass
+    def check_club(ghg):
+        print(ghg)
+        # window = Toplevel()
+        # window.title('Клуб')
+        # window.geometry('600x600')
 
     def del_club():
         pass

@@ -2,9 +2,10 @@ from configparser import ConfigParser
 from functools import wraps
 import mysql.connector
 from mysql.connector import Error
-from os import getcwd
+from os import getcwd, remove,makedirs,mkdir
 from datetime import datetime as dt
 from Backend.Modules.Kdk_modul import *
+from shutil import copy
 
 if __name__ == '__main__':
     path_to_db = getcwd()[0:-16] + '\\DB\\db_config.ini'
@@ -36,6 +37,8 @@ db_config = read_db_config()
 conn = mysql.connector.connect(**db_config)  # соединение с базой данных
 
 cursor = conn.cursor()  # курсор
+
+folders_for_club = ['Устав', 'МинЮст', 'ФНС', 'Прткл о создании', 'Нзнч Руковод', 'Офис']
 
 
 def connect(func):
@@ -99,7 +102,6 @@ class User:
         value_str = ''
         value_str = value_str + f'({",".join(values[list(values.keys())[0]])})' + ';'
         query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
-
         cursor.execute(query)
         conn.commit()
 
@@ -158,9 +160,11 @@ class Club:
         self.creat_rucovod = creat_rucovod
         self.ofice = ofice
         self.attestations = {}
+        self.my_folder = 0
         self.user_club = User('Клуб')
         self.user_club.add_to_db()
         self.add_to_db()
+        self.creat_folder()
 
     @connect
     def add_to_db(self):
@@ -188,11 +192,41 @@ class Club:
     def update_data_user(self, columns='', vls=''):
         self.user_club.update_data_user(table='clubs', columns=columns, vls=vls, id='club_id')
 
+    def creat_folder(self):
+        if self.my_folder == 0:
+            self.my_folder = getcwd() + f'\\MFF_Base\\Клубы\\{self.shrt_name}'
+            mkdir(self.my_folder)
+            for fold in folders_for_club:
+                mkdir(self.my_folder + f'\\{fold}')
+        else:
+            print('Папка уже создана')
+
+    # def add_files(self, data_for_folders):
+    #     for i in list(data_for_folders.keys()):
+    #         if i == 'Устав':
+    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
+    #             # remove(data_for_folders[i])
+    #         elif i == 'МинЮст':
+    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
+    #             # remove(data_for_folders[i])
+    #         elif i == 'ФНС':
+    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
+    #             # remove(data_for_folders[i])
+    #         elif i == 'Прткл о создании':
+    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
+    #             # remove(data_for_folders[i])
+    #         elif i == 'Нзнч Руковод':
+    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
+    #             # remove(data_for_folders[i])
+    #         elif i == 'Офис':
+    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
+    #             # remove(data_for_folders[i])
+
 
 class State:
-    def __init__(self, club_id, name, second_name, patrom='None', phone='None', email='None', name_of_state='None',
+    def __init__(self, club, name, second_name, patrom='None', phone='None', email='None', name_of_state='None',
                  doc_of_study='None', licence='None'):
-        self.club_id = self.check_club_id(club_id)
+        self.club_id = club.user_club.user_id
         self.name = name
         self.second_name = second_name
         self.patrom = patrom
@@ -203,6 +237,7 @@ class State:
         self.licence = licence
         self.user_state = User('Сотрудник Клуба')
         self.user_state.add_to_db()
+        self.add_to_db()
 
     @connect
     def add_to_db(self):
@@ -224,12 +259,12 @@ class State:
     def update_data_user(self, columns='', vls=''):
         self.user_state.update_data_user(table='club_state', columns=columns, vls=vls, id='user_id')
 
-    @connect
-    def check_club_id(self, club_id):
-        query = f"select club_id from clubs where name='{club_id}'"
-        cursor.execute(query)
-        result = cursor.fetchall()[0][0]
-        return result
+    # @connect
+    # def check_club_id(self, club_id):
+    #     query = f"select club_id from clubs where name='{club_id}'"
+    #     cursor.execute(query)
+    #     result = cursor.fetchall()[0][0]
+    #     return result
 
 
 class Stadium:
