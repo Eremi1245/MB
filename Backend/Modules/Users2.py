@@ -2,7 +2,7 @@ from configparser import ConfigParser
 from functools import wraps
 import mysql.connector
 from mysql.connector import Error
-from os import getcwd, remove,makedirs,mkdir
+from os import getcwd, remove, makedirs, mkdir
 from datetime import datetime as dt
 from Backend.Modules.Kdk_modul import *
 from shutil import copy
@@ -201,26 +201,27 @@ class Club:
         else:
             print('Папка уже создана')
 
-    # def add_files(self, data_for_folders):
-    #     for i in list(data_for_folders.keys()):
-    #         if i == 'Устав':
-    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
-    #             # remove(data_for_folders[i])
-    #         elif i == 'МинЮст':
-    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
-    #             # remove(data_for_folders[i])
-    #         elif i == 'ФНС':
-    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
-    #             # remove(data_for_folders[i])
-    #         elif i == 'Прткл о создании':
-    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
-    #             # remove(data_for_folders[i])
-    #         elif i == 'Нзнч Руковод':
-    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
-    #             # remove(data_for_folders[i])
-    #         elif i == 'Офис':
-    #             copy(data_for_folders[i], self.my_folder + f'\\{i}')
-    #             # remove(data_for_folders[i])
+    def add_files(self, data_for_folders):
+        print(data_for_folders)
+        for i in list(data_for_folders.keys()):
+            if i == 'Устав (перетащить)':
+                copy(data_for_folders[i], self.my_folder + '\\Устав')
+                # remove(data_for_folders[i])
+            elif i == 'МинЮст (перетащить)':
+                copy(data_for_folders[i], self.my_folder + '\\МинЮст')
+                # remove(data_for_folders[i])
+            elif i == 'ФНС (перетащить)':
+                copy(data_for_folders[i], self.my_folder + '\\ФНС')
+                # remove(data_for_folders[i])
+            elif i == 'Протокол создания юридического лица (перетащить)':
+                copy(data_for_folders[i], self.my_folder + f'\\Прткл о создании')
+                # remove(data_for_folders[i])
+            elif i == 'Протокол назначения руководителя (перетащить)':
+                copy(data_for_folders[i], self.my_folder + f'\\Нзнч Руковод')
+                # remove(data_for_folders[i])
+            elif i == 'Офис (перетащить)':
+                copy(data_for_folders[i], self.my_folder + f'\\Офис')
+                # remove(data_for_folders[i])
 
 
 class State:
