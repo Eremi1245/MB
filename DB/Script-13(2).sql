@@ -65,6 +65,11 @@ FOR each row
 END//
 delimiter ;
    
+CREATE OR REPLACE VIEW total_club_info as 
+select c.club_id , c.name ,c.shrt_name , c.o_p_f ,c.jur_addr, 
+c.fact_addr , c.site, c.phone, c.inn , c.kpp ,c.okpo ,c.ogrn from clubs c; 
+
+
 DROP TABLE IF EXISTS club_state;
 CREATE TABLE club_state (
 	user_id BIGINT UNSIGNED NOT null,
@@ -284,3 +289,10 @@ CREATE TABLE Decisions_Cases (
 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (case_id) REFERENCES Cases(meeting_id)
 	) COMMENT 'Решения';
+	
+
+CREATE OR REPLACE VIEW attet_club_info as
+select a.club_id ,b.`year` , b.att_status ,a.club_status , 
+b.stadium , b.stadium_status , b.document ,b.document_until ,
+b.application_1 ,b.application_2 ,b.application_3 ,b.application_4 ,
+b.application_5 from clubs a left join attestation b on a.club_id = b.club_id ;

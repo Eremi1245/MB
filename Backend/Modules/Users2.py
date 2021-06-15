@@ -327,8 +327,8 @@ class Attestation:
 
     def __init__(self, club, stadium, year, application_1=0, application_2=0, application_3=0,
                  application_4=0, application_5=0, document='None', document_until='0000-00-00'):
-        self.stad_id = stadium.user_stadium.user_id
-        self.club_id = club.user_club.user_id
+        self.stad_id = stadium
+        self.club_id = club
         self.year = year
         # Заявления
         self.application_1 = application_1

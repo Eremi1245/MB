@@ -1,6 +1,6 @@
 from Backend.Modules.Users2 import *
-# from UI.MainMenu import *
 from Backend.Modules.Kdk_modul import *
+from tkinter import filedialog
 from tkinter import *
 from os import *
 from pyperclip import copy, paste
@@ -40,21 +40,23 @@ def window_of_kdk():
 
 
 def window_of_case():
-    window = Toplevel()
-    window.title('Дело')
-    window.geometry('600x600')
+    case_window = Toplevel()
+    case_window.title('Дело')
+    case_window.geometry('600x600')
 
 
 def window_of_stadium():
-    window = Toplevel()
-    window.title('Добавить Стадион')
-    window.geometry('800x800')
+    stad_window = Toplevel()
+    stad_window.title('Добавить Стадион')
+    stad_window.geometry('800x800')
 
 
 # Функция для общей вкладки "Юзеры"
 all_txt_items = {}
 
 files_paths = {}
+
+applic_data = {}
 
 
 def save_pth(key, file):
@@ -209,7 +211,7 @@ def start():
                 lbl3.grid(column=3, row=count)
                 lbl4 = Label(frame_lables, text=f'{i[4]}')
                 lbl4.grid(column=4, row=count)
-                btn_info = Button(frame_lables, text="Смотреть", command=partial(check_club, lbl.cget("text")))
+                btn_info = Button(frame_lables, text="Смотреть", command=partial(look_club, lbl.cget("text")))
                 btn_info.grid(column=5, row=count)
                 btn_del = Button(frame_lables, text="Удалить", command=del_club)
                 btn_del.grid(column=6, row=count)
@@ -217,11 +219,16 @@ def start():
         except TypeError as err:
             print(f'Ошибка {err}')  # забить в логи
 
-    def check_club(ghg):
+    @connect
+    def look_club(ghg):
         print(ghg)
-        # window = Toplevel()
-        # window.title('Клуб')
-        # window.geometry('600x600')
+        query = 'select * from info_about_all_users;'
+        cursor.execute(query)
+        number = cursor.fetchall()
+        return number
+        window = Toplevel()
+        window.title('Клуб')
+        window.geometry('600x600')
 
     def del_club():
         pass
@@ -237,6 +244,119 @@ def start():
             # txt_col = Text(window, width=30, height=3, wrap=WORD)
             # txt_col.grid(row=txt, column=1)
 
+    def attet_window():
+        try:
+            attet_window = Toplevel()
+            attet_window.title('Добавить Аттестацию')
+            attet_window.geometry('700x300')
+
+            def creat_attestat():
+                if applic_1.get('1.0', END)[:-1] == '':
+                    appl_1 = 0
+                else:
+                    appl_1 = 1
+                if applic_2.get('1.0', END)[:-1] == '':
+                    appl_2 = 0
+                else:
+                    appl_2 = 1
+                if applic_3.get('1.0', END)[:-1] == '':
+                    appl_3 = 0
+                else:
+                    appl_3 = 1
+                if applic_4.get('1.0', END)[:-1] == '':
+                    appl_4 = 0
+                else:
+                    appl_4 = 1
+                if applic_5.get('1.0', END)[:-1] == '':
+                    appl_5 = 0
+                else:
+                    appl_5 = 1
+                Attestation(clubs.get().split(',')[0][1:], stad.get().split(',')[0][1:], year.get(), appl_1, appl_2,
+                            appl_3, appl_4, appl_5, text_doc.get('1.0', END)[:-1], text_doc_until.get('1.0', END)[:-1])
+
+            def install_mff(lbl_object):
+                k = Toplevel()
+                k.title('Добавить Аттестацию')
+                k.geometry('1x1')
+                filename = filedialog.askopenfilename()
+                lbl_object.insert('1.0', filename)
+                applic_data[lbl_object] = filename
+                k.destroy()
+                return filename
+
+            @connect
+            def take_clubs():
+                query = 'select club_id, shrt_name from clubs;'
+                cursor.execute(query)
+                number = cursor.fetchall()
+                return number
+
+            def take_stads():
+                query = 'select stad_id, shrt_name from stadiums;'
+                cursor.execute(query)
+                number = cursor.fetchall()
+                return number
+
+            # document = 'None', document_until = '0000-00-00'
+            Label(attet_window, text='Клуб').grid(row=0, column=0)
+            clubs = StringVar(attet_window)
+            clubs.set([x for x in take_clubs()])
+            komanda1 = OptionMenu(attet_window, clubs, *[x for x in take_clubs()])
+            komanda1.config(width=15)
+            komanda1.grid(row=0, column=1)
+            Label(attet_window, text='Год').grid(row=0, column=2)
+            year = StringVar(attet_window)
+            year.set(['2020', '2021', '2022', '2023', '2024', '2025'])
+            attet_year = OptionMenu(attet_window, year, *['2020', '2021', '2022', '2023', '2024', '2025'])
+            attet_year.config(width=15)
+            attet_year.grid(row=0, column=3)
+            Label(attet_window, text='Стадион').grid(row=0, column=4)
+            stad = StringVar(attet_window)
+            stad.set([x for x in take_stads()])
+            attet_stad = OptionMenu(attet_window, stad, *[x for x in take_stads()])
+            attet_stad.config(width=15)
+            attet_stad.grid(row=0, column=5)
+            Label(attet_window, text='Заявление 1').grid(row=1, column=0)
+            applic_1 = Text(attet_window, width=15, height=1, wrap=WORD)
+            applic_1.grid(row=1, column=2)
+            applic_1_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_1), width=7,
+                                     height=1)
+            applic_1_button.grid(row=1, column=1)
+            Label(attet_window, text='Заявление 2').grid(row=2, column=0)
+            applic_2 = Text(attet_window, width=15, height=1, wrap=WORD)
+            applic_2.grid(row=2, column=2)
+            applic_2_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_2), width=7,
+                                     height=1)
+            applic_2_button.grid(row=2, column=1)
+            Label(attet_window, text='Заявление 3').grid(row=3, column=0)
+            applic_3 = Text(attet_window, width=15, height=1, wrap=WORD)
+            applic_3.grid(row=3, column=2)
+            applic_3_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_3), width=7,
+                                     height=1)
+            applic_3_button.grid(row=3, column=1)
+            Label(attet_window, text='Заявление 4').grid(row=4, column=0)
+            applic_4 = Text(attet_window, width=15, height=1, wrap=WORD)
+            applic_4.grid(row=4, column=2)
+            applic_4_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_4), width=7,
+                                     height=1)
+            applic_4_button.grid(row=4, column=1)
+            Label(attet_window, text='Заявление 5').grid(row=5, column=0)
+            applic_5 = Text(attet_window, width=15, height=1, wrap=WORD)
+            applic_5.grid(row=5, column=2)
+            applic_5_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_5), width=7,
+                                     height=1)
+            applic_5_button.grid(row=5, column=1)
+            Label(attet_window, text='Документ').grid(row=6, column=0)
+            text_doc = Text(attet_window, width=15, height=1, wrap=WORD)
+            text_doc.grid(row=6, column=1)
+            Label(attet_window, text='Документ до').grid(row=7, column=0)
+            text_doc_until = Text(attet_window, width=15, height=1, wrap=WORD)
+            text_doc_until.grid(row=7, column=1)
+            creat_attestation = Button(attet_window, text='Аттестировать', command=creat_attestat)
+            creat_attestation.grid(row=8, column=0, columnspan=2)
+        except Error as er:
+            print(er)
+
     def update():
         main_menu.update()
         show_users(1)
@@ -248,10 +368,12 @@ def start():
     add_stadium.grid(row=0, column=0)
     add_club = Button(text="Добавить клуб", command=window_of_club)
     add_club.grid(row=0, column=1)
-    add_club = Button(text="Добавить Заседание КДК", command=window_of_kdk)
-    add_club.grid(row=0, column=2)
+    add_kdk = Button(text="Добавить Заседание КДК", command=window_of_kdk)
+    add_kdk.grid(row=0, column=2)
+    attet_button = Button(text="Аттестация", command=attet_window)
+    attet_button.grid(row=0, column=3)
     update_button = Button(text="Обновить", command=update)
-    update_button.grid(row=0, column=3)
+    update_button.grid(row=0, column=4)
     tab_control = ttk.Notebook(main_menu)
     # Вкладки
     tab_of_users = ttk.Frame(tab_control, width=560, height=560)

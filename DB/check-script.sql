@@ -35,4 +35,18 @@
 -- 
 -- select * from info_about_all_users;
 
-insert into kdk (date_meeting,notes) values ('2021-06-11',"Пробуем создать заседание");
+-- insert into kdk (date_meeting,notes) values ('2021-06-11',"Пробуем создать заседание");
+
+
+-- CREATE OR REPLACE VIEW total_club_info as 
+-- c.club_id , c.name ,c.shrt_name , c.o_p_f ,c.jur_addr, 
+-- c.fact_addr , c.site, c.phone, c.inn , c.kpp ,c.okpo ,c.ogrn from clubs c; 
+
+
+-- CREATE OR REPLACE VIEW attet_club_info as
+-- select a.club_id ,b.`year` , b.att_status ,a.club_status , 
+-- b.stadium , b.stadium_status , b.document ,b.document_until ,
+-- b.application_1 ,b.application_2 ,b.application_3 ,b.application_4 ,
+-- b.application_5 from clubs a left join attestation b on a.club_id = b.club_id ;
+
+select * from attet_club_info;
