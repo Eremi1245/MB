@@ -338,6 +338,7 @@ class Attestation:
         self.application_5 = application_5
         self.document = document
         self.document_until = document_until
+        self.my_folder = 0
         self.add_to_db()
 
     @connect
@@ -377,3 +378,14 @@ class Attestation:
         query = f"UPDATE attestation SET {quer_vls} WHERE id={self.id}"
         cursor.execute(query)
         conn.commit()
+
+    def add_docs_to_club(self,shrt_name,docum_paths):
+        if self.my_folder == 0:
+            self.my_folder = getcwd() + f'\\MFF_Base\\Аттестация\\{self.year}-{shrt_name}'
+            mkdir(self.my_folder)
+        else:
+            print('Папка уже создана')
+        for i in list(docum_paths.keys()):
+            mkdir(self.my_folder+f'\\{i}')
+            copy(docum_paths[i],self.my_folder+f'\\{i}')
+            # remove(docum_paths[i])

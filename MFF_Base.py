@@ -7,6 +7,10 @@ from pyperclip import copy, paste
 from functools import partial
 import windnd
 
+# 2.Стадион создает файлы и помещает туда файлы
+# 3.Визуал КДК
+# 4.Визуал уведомление
+# 5.Визуал решение
 
 # club = Club('огонь', 'вода', 'fdsf', 'fdsf', 'fdsf', 'fdsf', 'fdsf', 'fdsf', 1234, 1234, 1234, 1234, 'dfdfs', 1234,
 #             1234,
@@ -48,13 +52,61 @@ def window_of_case():
 def window_of_stadium():
     stad_window = Toplevel()
     stad_window.title('Добавить Стадион')
-    stad_window.geometry('800x800')
+    stad_window.geometry('1100x600')
+    stad_titles = ['Офиц Наименование', 'Название', 'Организационно-правовая форма',
+                   'Юридический адрес', 'Телефон','Сайт', 'Email', 'ИНН', 'КПП', 'ОКПО', 'ОГРН',
+                   'В реестре объектов спорта', 'Ввод в эксплуатацию',
+                   'Инструкция по обеспечению безопасности','Инструкиция до', 'Акт обследования и категорирования',
+                   'Акт до ', 'План стадиона', 'Категория РФС']
+    def creat_stad():
+        pass
+
+    def clear_stad_window():
+        for item in all_txt_items:
+            all_txt_items_stad[item].delete('1.0', END)
+
+    def save_pth_stad(key, file):
+        file = file[0].decode('CP1251')
+        all_txt_items_stad[key].insert('1.0', file)
+        files_paths_stad[key] = file
+    # создаем меню
+    for lbl in range(0, 11):
+        lbl_col = Label(stad_window, text=stad_titles[lbl], width=25, height=3, background='lightblue', anchor=W, wraplength=160,
+                        justify=LEFT)
+        lbl_col.grid(row=lbl, column=0)
+    for txt in range(0, 11):
+        txt_col = Text(stad_window, width=30, height=3, wrap=WORD)
+        txt_col.grid(row=txt, column=1)
+        all_txt_items_stad[stad_titles[txt]] = txt_col
+    # Окна с возможностью перетащить документ
+    for lbl in range(11, 19):
+        lbl_col = Label(stad_window, text=stad_titles[lbl], width=25, height=3, background='lightblue', anchor=W, wraplength=160,
+                        justify=LEFT)
+        lbl_col.grid(row=lbl - 11, column=2)
+    for txt in range(11, 19):
+        txt_col = Text(stad_window, width=30, height=3, wrap=WORD)
+        txt_col.grid(row=txt - 11, column=3)
+        all_txt_items_stad[stad_titles[txt]] = txt_col
+        key = stad_titles[txt]
+        windnd.hook_dropfiles(txt_col, func=partial(save_pth_stad, key))
+
+    create_stad_button = Button(stad_window, text='Создать Стадион', command=creat_stad, width=35, height=3)
+    create_stad_button.grid(row=2, column=4, sticky=W)
+
+    clr = Button(stad_window, text='Очистить', command=clear, width=35, height=3)
+    clr.grid(row=3, column=4, sticky=W)
+
+
 
 
 # Функция для общей вкладки "Юзеры"
 all_txt_items = {}
 
+all_txt_items_stad={}
+
 files_paths = {}
+
+files_paths_stad = {}
 
 applic_data = {}
 
@@ -271,15 +323,16 @@ def start():
                     appl_5 = 0
                 else:
                     appl_5 = 1
-                Attestation(clubs.get().split(',')[0][1:], stad.get().split(',')[0][1:], year.get(), appl_1, appl_2,
+                new_att=Attestation(clubs.get().split(',')[0][1:], stad.get().split(',')[0][1:], year.get(), appl_1, appl_2,
                             appl_3, appl_4, appl_5, text_doc.get('1.0', END)[:-1], text_doc_until.get('1.0', END)[:-1])
+                new_att.add_docs_to_club(clubs.get().split(',')[1][2:-4],applic_data)
 
-            def install_mff(lbl_object):
+            def install_mff(txt_object,lbl_object):
                 k = Toplevel()
                 k.title('Добавить Аттестацию')
                 k.geometry('1x1')
                 filename = filedialog.askopenfilename()
-                lbl_object.insert('1.0', filename)
+                txt_object.insert('1.0', filename)
                 applic_data[lbl_object] = filename
                 k.destroy()
                 return filename
@@ -316,34 +369,34 @@ def start():
             attet_stad = OptionMenu(attet_window, stad, *[x for x in take_stads()])
             attet_stad.config(width=15)
             attet_stad.grid(row=0, column=5)
-            Label(attet_window, text='Заявление 1').grid(row=1, column=0)
+            l1=Label(attet_window, text='Заявление 1').grid(row=1, column=0)
             applic_1 = Text(attet_window, width=15, height=1, wrap=WORD)
             applic_1.grid(row=1, column=2)
-            applic_1_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_1), width=7,
-                                     height=1)
+            applic_1_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_1,'Заявление 1')
+                                     , width=7,height=1)
             applic_1_button.grid(row=1, column=1)
             Label(attet_window, text='Заявление 2').grid(row=2, column=0)
             applic_2 = Text(attet_window, width=15, height=1, wrap=WORD)
             applic_2.grid(row=2, column=2)
-            applic_2_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_2), width=7,
+            applic_2_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_2,'Заявление 2'), width=7,
                                      height=1)
             applic_2_button.grid(row=2, column=1)
             Label(attet_window, text='Заявление 3').grid(row=3, column=0)
             applic_3 = Text(attet_window, width=15, height=1, wrap=WORD)
             applic_3.grid(row=3, column=2)
-            applic_3_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_3), width=7,
+            applic_3_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_3,'Заявление 3'), width=7,
                                      height=1)
             applic_3_button.grid(row=3, column=1)
             Label(attet_window, text='Заявление 4').grid(row=4, column=0)
             applic_4 = Text(attet_window, width=15, height=1, wrap=WORD)
             applic_4.grid(row=4, column=2)
-            applic_4_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_4), width=7,
+            applic_4_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_4,'Заявление 4'), width=7,
                                      height=1)
             applic_4_button.grid(row=4, column=1)
             Label(attet_window, text='Заявление 5').grid(row=5, column=0)
             applic_5 = Text(attet_window, width=15, height=1, wrap=WORD)
             applic_5.grid(row=5, column=2)
-            applic_5_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_5), width=7,
+            applic_5_button = Button(attet_window, text='Загрузить', command=partial(install_mff, applic_5,'Заявление 5'), width=7,
                                      height=1)
             applic_5_button.grid(row=5, column=1)
             Label(attet_window, text='Документ').grid(row=6, column=0)
