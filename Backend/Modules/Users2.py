@@ -40,6 +40,9 @@ cursor = conn.cursor()  # курсор
 
 folders_for_club = ['Устав', 'МинЮст', 'ФНС', 'Прткл о создании', 'Нзнч Руковод', 'Офис']
 
+folders_for_stad = ['Реестр', 'Ввод в эксплуатацию', 'Инструкция',
+                    'Акт катег', 'План стадиона', 'Категория РФС']
+
 
 def connect(func):
     """Подключение в БД """
@@ -292,9 +295,11 @@ class Stadium:
         self.act_categ_date_until = act_categ_date_until
         self.statd_plan = statd_plan
         self.category = category
+        self.my_folder = 0
         self.user_stadium = User('Стадион')
         self.user_stadium.add_to_db()
         self.add_to_db()
+        self.creat_folder()
 
     @connect
     def add_to_db(self):
@@ -320,6 +325,37 @@ class Stadium:
     @connect
     def update_data_user(self, columns='', vls=''):
         self.user_stadium.update_data_user(table='stadiums', columns=columns, vls=vls, id='stad_id')
+
+    def creat_folder(self):
+        if self.my_folder == 0:
+            self.my_folder = getcwd() + f'\\MFF_Base\\Стадионы\\{self.shrt_name}'
+            mkdir(self.my_folder)
+            for fold in folders_for_stad:
+                mkdir(self.my_folder + f'\\{fold}')
+        else:
+            print('Папка уже создана')
+
+    def add_files(self, data_for_folders):
+        for i in list(data_for_folders.keys()):
+            if i == 'В реестре объектов спорта':
+                copy(data_for_folders[i], self.my_folder + '\\Реестр')
+                # remove(data_for_folders[i])
+            elif i == 'Ввод в эксплуатацию':
+                copy(data_for_folders[i], self.my_folder + '\\Ввод в эксплуатацию')
+                # remove(data_for_folders[i])
+            elif i == 'Инструкция по обеспечению безопасности':
+                copy(data_for_folders[i], self.my_folder + '\\Инструкция')
+                # remove(data_for_folders[i])
+            elif i == 'Акт обследования и категорирования':
+                copy(data_for_folders[i], self.my_folder + f'\\Акт катег')
+                # remove(data_for_folders[i])
+            elif i == 'План стадиона':
+                copy(data_for_folders[i], self.my_folder + f'\\План стадиона')
+                # remove(data_for_folders[i])
+            elif i == 'Категория РФС':
+                if data_for_folders[i] != 'no category':
+                    copy(data_for_folders[i], self.my_folder + f'\\Категория РФС')
+                    # remove(data_for_folders[i])
 
 
 class Attestation:
@@ -379,13 +415,13 @@ class Attestation:
         cursor.execute(query)
         conn.commit()
 
-    def add_docs_to_club(self,shrt_name,docum_paths):
+    def add_docs_to_club(self, shrt_name, docum_paths):
         if self.my_folder == 0:
             self.my_folder = getcwd() + f'\\MFF_Base\\Аттестация\\{self.year}-{shrt_name}'
             mkdir(self.my_folder)
         else:
             print('Папка уже создана')
         for i in list(docum_paths.keys()):
-            mkdir(self.my_folder+f'\\{i}')
-            copy(docum_paths[i],self.my_folder+f'\\{i}')
+            mkdir(self.my_folder + f'\\{i}')
+            copy(docum_paths[i], self.my_folder + f'\\{i}')
             # remove(docum_paths[i])
