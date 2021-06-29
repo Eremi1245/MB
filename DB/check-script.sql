@@ -49,4 +49,5 @@
 -- b.application_1 ,b.application_2 ,b.application_3 ,b.application_4 ,
 -- b.application_5 from clubs a left join attestation b on a.club_id = b.club_id ;
 
-select * from attet_club_info;
+-- select * from attet_club_info;
+select id,date_meeting,notes,COUNT(id) from kdk;

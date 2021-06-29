@@ -205,7 +205,6 @@ class Club:
             print('Папка уже создана')
 
     def add_files(self, data_for_folders):
-        print(data_for_folders)
         for i in list(data_for_folders.keys()):
             if i == 'Устав (перетащить)':
                 copy(data_for_folders[i], self.my_folder + '\\Устав')

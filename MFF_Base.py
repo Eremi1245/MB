@@ -2,6 +2,7 @@ from Backend.Modules.Users2 import *
 from Backend.Modules.Kdk_modul import *
 from tkinter import filedialog
 from tkinter import *
+from PIL import ImageTk, Image
 from os import *
 from functools import partial
 import windnd
@@ -13,8 +14,12 @@ import windnd
 # 6.Визуал кнопки "Смотреть" для юзеров + Удаление
 # 7.Добавление в каждую вкладку своих юзеров
 
-def window_of_kdk():
-    pass
+@connect
+def meet_info():
+    query = 'select id,date_meeting,notes from kdk;'
+    cursor.execute(query)
+    meetings = cursor.fetchall()
+    return meetings
 
 
 def window_of_case():
@@ -207,57 +212,57 @@ def window_of_club():
 
     # Функиця создания Клуба
     def creat_club():
-        if all_txt_items['Устав (перетащить)'].get('1.0') != '':
+        if all_txt_items['Устав (перетащить)'].get('1.0', END)[0:-1] != '':
             ustav = 1
         else:
             ustav = 0
-        if all_txt_items['МинЮст (перетащить)'].get('1.0') != '':
+        if all_txt_items['МинЮст (перетащить)'].get('1.0', END)[0:-1] != '':
             min_ust = 1
         else:
             min_ust = 0
-        if all_txt_items['ФНС (перетащить)'].get('1.0') != '':
+        if all_txt_items['ФНС (перетащить)'].get('1.0', END)[0:-1] != '':
             fns = 1
         else:
             fns = 0
-        if all_txt_items['Протокол создания юридического лица (перетащить)'].get('1.0') != '':
+        if all_txt_items['Протокол создания юридического лица (перетащить)'].get('1.0', END)[0:-1] != '':
             creat_company = 1
         else:
             creat_company = 0
-        if all_txt_items['Протокол назначения руководителя (перетащить)'].get('1.0') != '':
+        if all_txt_items['Протокол назначения руководителя (перетащить)'].get('1.0', END)[0:-1] != '':
             header = 1
         else:
             header = 0
-        if all_txt_items['Офис (перетащить)'].get('1.0') != '':
+        if all_txt_items['Офис (перетащить)'].get('1.0', END)[0:-1] != '':
             ofice = 1
         else:
             ofice = 0
         try:
-            new_user = Club(all_txt_items['Полное наименование юридического лица'].get('1.0'),
-                            all_txt_items['Телефон'].get('1.0'),
-                            all_txt_items['Email'].get('1.0'),
-                            all_txt_items['Сокращенное наименование'].get('1.0'),
-                            all_txt_items['Организационно-правовая форма'].get('1.0'),
-                            all_txt_items['Юридический адрес'].get('1.0'),
-                            all_txt_items['Фактический адрес'].get('1.0'),
-                            all_txt_items['Сайт'].get('1.0'),
-                            all_txt_items['ИНН'].get('1.0'),
-                            all_txt_items['КПП'].get('1.0'),
-                            all_txt_items['ОКПО'].get('1.0'),
-                            all_txt_items['ОГРН'].get('1.0'),
-                            all_txt_items['Наименовае Банка'].get('1.0'),
-                            all_txt_items['Корреспонденсткий счет'].get('1.0'),
-                            all_txt_items['Расчетный счет'].get('1.0'),
-                            all_txt_items['БИК банка'].get('1.0'),
+            new_user = Club(all_txt_items['Полное наименование юридического лица'].get('1.0', END)[0:-1],
+                            all_txt_items['Телефон'].get('1.0', END)[0:-1],
+                            all_txt_items['Email'].get('1.0', END)[0:-1],
+                            all_txt_items['Сокращенное наименование'].get('1.0', END)[0:-1],
+                            all_txt_items['Организационно-правовая форма'].get('1.0', END)[0:-1],
+                            all_txt_items['Юридический адрес'].get('1.0', END)[0:-1],
+                            all_txt_items['Фактический адрес'].get('1.0', END)[0:-1],
+                            all_txt_items['Сайт'].get('1.0', END)[0:-1],
+                            all_txt_items['ИНН'].get('1.0', END)[0:-1],
+                            all_txt_items['КПП'].get('1.0', END)[0:-1],
+                            all_txt_items['ОКПО'].get('1.0', END)[0:-1],
+                            all_txt_items['ОГРН'].get('1.0', END)[0:-1],
+                            all_txt_items['Наименовае Банка'].get('1.0', END)[0:-1],
+                            all_txt_items['Корреспонденсткий счет'].get('1.0', END)[0:-1],
+                            all_txt_items['Расчетный счет'].get('1.0', END)[0:-1],
+                            all_txt_items['БИК банка'].get('1.0', END)[0:-1],
                             ustav, min_ust, fns, creat_company, header, ofice)
             new_user_label = Label(window,
-                                   text=f'Клуб {all_txt_items["Сокращенное наименование"].get("1.0")} создан '
+                                   text=f'Клуб {all_txt_items["Сокращенное наименование"].get("1.0", END)[0:-1]} создан '
                                         f'и добавлен в базу, номер id - {new_user.user_club.user_id}',
                                    width=35, height=5, background='green', anchor=W, wraplength=180, justify=LEFT)
             new_user_label.grid(row=2, column=5, sticky=W)
             new_user.add_files(files_paths)
         except Exception as er:
             new_user_label = Label(window,
-                                   text=f'Клуб {all_txt_items["Сокращенное наименование"].get("1.0")} не создан, '
+                                   text=f'Клуб {all_txt_items["Сокращенное наименование"].get("1.0", END)[0:-1]} не создан, '
                                         f'ошибка: {er}',
                                    width=35, height=5, background='red', anchor=W, wraplength=180, justify=LEFT)
             new_user_label.grid(row=2, column=5, sticky=W)
@@ -311,6 +316,11 @@ def start():
     main_menu.title('База команд МФФ')
     main_menu.geometry('1366x768')
 
+    # image2 = Image.open('img/main_menu.jpg')
+    # image1 = ImageTk.PhotoImage(image2)
+    # bg_label = Label(main_menu, image=image1)
+    # bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
     @connect
     def users_info():
         query = 'select * from info_about_all_users;'
@@ -354,15 +364,23 @@ def start():
         pass
 
     def meeting_info():
-        meetings = listdir(getcwd() + '\\MFF_Base\\КДК')
-        print(meetings)
-        for meet in range(len(meetings)):
-            lbl_obj = Label(frame_meeting, text=f'{meetings[meet]}')
-            lbl_obj.grid(column=0, row=1)
-            lbl_obj = Label(frame_meeting, text='')
-            lbl_obj.grid(column=1, row=1)
-            # txt_col = Text(window, width=30, height=3, wrap=WORD)
-            # txt_col.grid(row=txt, column=1)
+        meetings = meet_info()
+        try:
+            for meet in range(len(meetings)):
+                lbl_obj = Label(frame_meeting, text=f'{meetings[meet][0]}')
+                lbl_obj.grid(column=0, row=meet + 1)
+                lbl_obj = Label(frame_meeting, text=f'{meetings[meet][1]}')
+                lbl_obj.grid(column=1, row=meet + 1)
+                lbl_obj = Label(frame_meeting, text=f'{meetings[meet][2]}')
+                lbl_obj.grid(column=2, row=meet + 1)
+                if len(meetings) != 0:
+                    meet_button = Button(frame_meeting, text="Добавить Дело", command=window_of_case)
+                    meet_button.grid(column=3, row=meet + 1)
+
+                # txt_col = Text(window, width=30, height=3, wrap=WORD)
+                # txt_col.grid(row=txt, column=1)
+        except Error as er:
+            print(er)
 
     def attet_window():
         try:
@@ -490,6 +508,30 @@ def start():
         show_users(1)
         meeting_info()
 
+    def add(date, notes, lbl_1):
+        KDK(date.get('1.0', END)[0:-1], notes.get('1.0', END)[0:-1])
+        date.destroy()
+        notes.destroy()
+        lbl_1.destroy()
+        meeting_info()
+
+    def window_of_kdk():
+        meets = meet_info()
+        if meets is None:
+            meets = 1
+        else:
+            meets = len(meets) + 1
+        label_for_kdk_1 = Label(frame_meeting, text='Укажите дату заседния',
+                                background='lightblue', anchor=W, wraplength=160, justify=LEFT)
+        label_for_kdk_1.grid(row=meets, column=0)
+        text_for_kdk_1 = Text(frame_meeting, width=15, height=1, wrap=WORD)
+        text_for_kdk_1.grid(row=meets, column=1)
+        text_for_kdk_2 = Text(frame_meeting, width=15, height=5, wrap=WORD)
+        text_for_kdk_2.grid(row=meets, column=2)
+        button_for_kdk = Button(frame_meeting, text="Добавить",
+                                command=partial(add, text_for_kdk_1, text_for_kdk_2, label_for_kdk_1))
+        button_for_kdk.grid(row=meets, column=3)
+
     search = Entry()
     search.grid(row=0, column=2)
     add_stadium = Button(text="Добавить стадион", command=window_of_stadium)
@@ -561,7 +603,7 @@ def start():
     lbl = Label(frame_meeting, text='Заметки')
     lbl.grid(column=2, row=0)
     meeting_info()
-    add_button = Button(frame_meeting, text="Добавить заседание", command=window_of_case)
+    add_button = Button(frame_meeting, text="Добавить Заседание", command=window_of_kdk)
     add_button.grid(column=3, row=0)
     main_menu.update()
     canvas_kdk.config(scrollregion=canvas.bbox("all"))

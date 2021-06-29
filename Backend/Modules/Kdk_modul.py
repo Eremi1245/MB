@@ -326,7 +326,7 @@ class KDK:
     @connect
     def add_in_base(self):
         if self.notes == '':
-            query = f"INSERT INTO KDK(date_meeting) VALUES {self.date};"
+            query = f'INSERT INTO KDK(date_meeting) VALUES ("{self.date}");'
             cursor.execute(query)
             conn.commit()
         else:
