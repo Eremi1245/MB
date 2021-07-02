@@ -313,8 +313,15 @@ class KDK:
         self.notes = notes
         self.cases = []
         self.my_folder = 0
-        self.creat_folder()
-        self.add_in_base()
+        try:
+            self.add_in_base()
+        except Error as er:
+            print(er)
+        try:
+            self.creat_folder()
+        except FileExistsError:
+            print('Такое заседание уже существует')
+
 
     def creat_folder(self):
         if self.my_folder == 0:

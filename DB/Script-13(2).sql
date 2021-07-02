@@ -220,20 +220,20 @@ delimiter ;
 DROP TABLE IF EXISTS KDK;
 CREATE TABLE KDK (
 	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
-	date_meeting date NOT null,
+	date_meeting date NOT null unique,
 	notes text,
 	first_registration DATETIME DEFAULT NOW(),
 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 	) COMMENT 'ÊÄÊ';
 
-CREATE INDEX date_meeting ON KDK(date_meeting);
+-- CREATE INDEX date_meeting ON KDK(date_meeting);
 
 
 DROP TABLE IF EXISTS Cases;
 CREATE TABLE Cases (
 	id  BIGINT UNSIGNED NOT NULL unique AUTO_INCREMENT,
 	meeting_id BIGINT UNSIGNED NOT NULL,
-	date_meeting date NOT null,
+	date_meeting date NOT null ,
 	case_number VARCHAR(255),
 	time_meeting time default '12:00:00',
 	potential_art VARCHAR(255),

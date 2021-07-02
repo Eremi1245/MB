@@ -14,6 +14,9 @@ import windnd
 # 6.Визуал кнопки "Смотреть" для юзеров + Удаление
 # 7.Добавление в каждую вкладку своих юзеров
 
+kdk_meetings={}
+# Добавить функционал добавления экземпялров КДК в папку в начале
+
 @connect
 def meet_info():
     query = 'select id,date_meeting,notes from kdk;'
@@ -365,7 +368,7 @@ def start():
 
     def meeting_info():
         meetings = meet_info()
-        try:
+        if meetings is not None:
             for meet in range(len(meetings)):
                 lbl_obj = Label(frame_meeting, text=f'{meetings[meet][0]}')
                 lbl_obj.grid(column=0, row=meet + 1)
@@ -379,8 +382,6 @@ def start():
 
                 # txt_col = Text(window, width=30, height=3, wrap=WORD)
                 # txt_col.grid(row=txt, column=1)
-        except Error as er:
-            print(er)
 
     def attet_window():
         try:
@@ -509,7 +510,8 @@ def start():
         meeting_info()
 
     def add(date, notes, lbl_1):
-        KDK(date.get('1.0', END)[0:-1], notes.get('1.0', END)[0:-1])
+        new_meet=KDK(date.get('1.0', END)[0:-1], notes.get('1.0', END)[0:-1])
+        kdk_meetings[new_meet.date]=new_meet
         date.destroy()
         notes.destroy()
         lbl_1.destroy()
