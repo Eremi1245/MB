@@ -6,6 +6,7 @@ from PIL import ImageTk, Image
 from os import *
 from functools import partial
 import windnd
+import datetime
 
 
 # 3.Визуал КДК (Для вкладки) + окно "Создания заседания"
@@ -14,6 +15,9 @@ import windnd
 # 6.Визуал кнопки "Смотреть" для юзеров + Удаление
 # 7.Добавление в каждую вкладку своих юзеров
 
+# CASE_NUMBER=52
+# YEAR=2021
+# CASE_STRING=f'Д-{CASE_NUMBER}/{YEAR}'
 kdk_meetings={}
 # Добавить функционал добавления экземпялров КДК в папку в начале
 
@@ -25,10 +29,122 @@ def meet_info():
     return meetings
 
 
+@connect
+def take_clubs():
+    query = 'select club_id, shrt_name from clubs;'
+    cursor.execute(query)
+    number = cursor.fetchall()
+    return number
+
 def window_of_case():
+    # league,potential_art,notes
     case_window = Toplevel()
     case_window.title('Дело')
     case_window.geometry('600x600')
+
+    #Дата заседания
+    Label(case_window, text='Дата Заседания').grid(row=0, column=0)
+    meets = StringVar(case_window)
+    meets.set([x[1] for x in meet_info()])
+    date_meeting = OptionMenu(case_window, meets, *[x[1] for x in meet_info()])
+    date_meeting.config(width=15)
+    date_meeting.grid(row=0, column=1)
+
+    # Вызов сторон
+    call = IntVar()
+    call_checkbutton = Checkbutton(case_window, text="Вызов Сторон", variable=call)
+    call_checkbutton.grid(row=0, column=2)
+
+    # видео матча
+    match_video = IntVar()
+    match_video_checkbutton = Checkbutton(case_window, text="Видео матча", variable=match_video)
+    match_video_checkbutton.grid(row=0, column=3)
+
+    Label(case_window, text='Номер заседания').grid(row=1, column=0)
+    num_case_text = Text(case_window, width=15, height=1, wrap=WORD)
+    num_case_text.grid(row=1, column=1)
+    Label(case_window, text='Время').grid(row=1, column=2)
+    num_case_text = Text(case_window, width=15, height=1, wrap=WORD)
+    num_case_text.grid(row=1, column=3)
+
+    Label(case_window, text='Клуб').grid(row=2, column=0)
+    clubs = StringVar(case_window)
+    clubs.set([x for x in take_clubs()])
+    komanda1 = OptionMenu(case_window, clubs, *[x for x in take_clubs()])
+    komanda1.config(width=15)
+    komanda1.grid(row=2, column=1)
+
+    Label(case_window, text='Клуб2').grid(row=2, column=2)
+    clubs2 = StringVar(case_window)
+    clubs2.set([x for x in take_clubs()])
+    komanda2 = OptionMenu(case_window, clubs2, *[x for x in take_clubs()])
+    komanda2.config(width=15)
+    komanda2.grid(row=2, column=3)
+
+
+
+
+
+#     Label(att_window, text='Год').grid(row=0, column=2)
+#     year = StringVar(att_window)
+#     year.set(['2020', '2021', '2022', '2023', '2024', '2025'])
+#     attet_year = OptionMenu(att_window, year, *['2020', '2021', '2022', '2023', '2024', '2025'])
+#     attet_year.config(width=15)
+#     attet_year.grid(row=0, column=3)
+#     Label(att_window, text='Стадион').grid(row=0, column=4)
+#     stad = StringVar(att_window)
+#     stad.set([x for x in take_stads()])
+#     attet_stad = OptionMenu(att_window, stad, *[x for x in take_stads()])
+#     attet_stad.config(width=15)
+#     attet_stad.grid(row=0, column=5)
+#     Label(att_window, text='Заявление 1').grid(row=1, column=0)
+#     applic_1 = Text(att_window, width=15, height=1, wrap=WORD)
+#     applic_1.grid(row=1, column=2)
+#     applic_1_button = Button(att_window, text='Загрузить',
+#                              command=partial(install_mff, applic_1, 'Заявление 1'),
+#                              width=7, height=1)
+#     applic_1_button.grid(row=1, column=1)
+#     Label(att_window, text='Заявление 2').grid(row=2, column=0)
+#     applic_2 = Text(att_window, width=15, height=1, wrap=WORD)
+#     applic_2.grid(row=2, column=2)
+#     applic_2_button = Button(att_window, text='Загрузить',
+#                              command=partial(install_mff, applic_2, 'Заявление 2'), width=7,
+#                              height=1)
+#     applic_2_button.grid(row=2, column=1)
+#     Label(att_window, text='Заявление 3').grid(row=3, column=0)
+#     applic_3 = Text(att_window, width=15, height=1, wrap=WORD)
+#     applic_3.grid(row=3, column=2)
+#     applic_3_button = Button(att_window, text='Загрузить',
+#                              command=partial(install_mff, applic_3, 'Заявление 3'), width=7,
+#                              height=1)
+#     applic_3_button.grid(row=3, column=1)
+#     Label(att_window, text='Заявление 4').grid(row=4, column=0)
+#     applic_4 = Text(att_window, width=15, height=1, wrap=WORD)
+#     applic_4.grid(row=4, column=2)
+#     applic_4_button = Button(att_window, text='Загрузить',
+#                              command=partial(install_mff, applic_4, 'Заявление 4'), width=7,
+#                              height=1)
+#     applic_4_button.grid(row=4, column=1)
+#     Label(att_window, text='Заявление 5').grid(row=5, column=0)
+#     applic_5 = Text(att_window, width=15, height=1, wrap=WORD)
+#     applic_5.grid(row=5, column=2)
+#     applic_5_button = Button(att_window, text='Загрузить',
+#                              command=partial(install_mff, applic_5, 'Заявление 5'), width=7,
+#                              height=1)
+#     applic_5_button.grid(row=5, column=1)
+#     Label(att_window, text='Документ').grid(row=6, column=0)
+#     text_doc = Text(att_window, width=15, height=1, wrap=WORD)
+#     text_doc.grid(row=6, column=1)
+#     Label(att_window, text='Документ до').grid(row=7, column=0)
+#     text_doc_until = Text(att_window, width=15, height=1, wrap=WORD)
+#     text_doc_until.grid(row=7, column=1)
+#     creat_attestation = Button(att_window, text='Аттестировать', command=creat_attestat)
+#     creat_attestation.grid(row=8, column=0, columnspan=2)
+#
+# except Error as er:
+# print(er)
+
+
 
 
 all_txt_items_stad = {}
@@ -426,12 +542,6 @@ def start():
                 k.destroy()
                 return filename
 
-            @connect
-            def take_clubs():
-                query = 'select club_id, shrt_name from clubs;'
-                cursor.execute(query)
-                number = cursor.fetchall()
-                return number
 
             def take_stads():
                 query = 'select stad_id, shrt_name from stadiums;'
